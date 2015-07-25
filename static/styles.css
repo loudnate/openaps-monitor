@@ -1,0 +1,23 @@
+pre {
+    overflow-x: auto;
+}
+pre code {
+    overflow-wrap: normal;
+    white-space: pre;
+}
+
+#glucose_chart {
+    height: 400px;
+}
+
+#input_chart {
+    height: 100px;
+}
+
+@media screen and (max-width:767px) {
+    .browse-nav {
+        overflow-y: auto;
+        max-height: 160px;
+        -webkit-overflow-scrolling: touch;
+    }
+}
