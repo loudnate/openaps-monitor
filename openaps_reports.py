@@ -1,7 +1,6 @@
 """
 Interface for openaps reports
 
-TODO: Document exceptions
 """
 from datetime import datetime
 from glob import glob
