@@ -9,10 +9,28 @@ import os
 
 
 class ReportFile(object):
+    """Defines file names relative to the openaps path containing report data to display"""
+
+    # A report containing glucose data in reverse-chronological order. Each entry should contain both a local timestamp
+    # and a glucose value:
+    # {
+    #   "date" | "display_time" : "<ISO date string>",
+    #   "sgv" | "amount" | "glucose" : 100
+    # }
     CLEAN_GLUCOSE = 'clean_glucose.json'
+
+    # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
+    # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
     NORMALIZE_HISTORY = 'normalize_history.json'
+
+    # A report containing predicted glucose values in chronological order, each item as a tuple of
+    # (local-timestamp, glucose value)
     PREDICT_GLUCOSE = 'predict_glucose.json'
+
+    # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
     READ_BG_TARGETS = 'read_bg_targets.json'
+
+    # A report containing the last-applied doses applied, if not yet present in `NORMALIZE_HISTORY`.
     SET_DOSE = 'set_dose.json'
 
 
