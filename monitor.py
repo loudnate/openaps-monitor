@@ -40,23 +40,23 @@ def monitor():
     )
 
 
-CSS_ASSETS = {
-    'static/bootstrap.css': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
-    'static/styles.css': None
-}
+CSS_ASSETS = (
+    ('static/bootstrap.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'),
+    ('static/styles.css', None)
+)
 
 
-JS_ASSETS = {
-    'static/bootstrap.js': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
-    'static/chart.js': 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
-                       'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js',
-    'static/jquery.js': 'https://code.jquery.com/jquery-2.1.4.min.js',
-    'static/monitor.js': None
-}
+JS_ASSETS = (
+    ('static/jquery.js', 'https://code.jquery.com/jquery-2.1.4.min.js'),
+    ('static/bootstrap.js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'),
+    ('static/chart.js', 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
+                        'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js'),
+    ('static/monitor.js', None)
+)
 
 
 def preload_assets():
-    for filename, url in JS_ASSETS.items() + CSS_ASSETS.items():
+    for filename, url in JS_ASSETS + CSS_ASSETS:
         if not os.path.exists(filename):
             print '{} not found, downloading from {}'.format(filename, url)
             try:

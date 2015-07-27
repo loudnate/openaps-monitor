@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ config.OPENAPS.name }} — openaps monitor</title>
-  {% for href in CSS_ASSETS.keys() %}
+  {% for href, _ in CSS_ASSETS %}
     <link rel="stylesheet" href="{{ href }}" />
   {% endfor %}
 </head>
@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  {% for src in JS_ASSETS.keys() %}
+  {% for src, _ in JS_ASSETS %}
     <script type="text/javascript" src="{{ src }}"></script>
   {% endfor %}
   <script type="text/javascript">
