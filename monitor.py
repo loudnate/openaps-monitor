@@ -49,6 +49,7 @@ CSS_ASSETS = (
 JS_ASSETS = (
     ('static/jquery.js', 'https://code.jquery.com/jquery-2.1.4.min.js'),
     ('static/bootstrap.js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'),
+    ('static/jsapi.js', 'https://www.google.com/jsapi'),
     ('static/chart.js', 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
                         'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js'),
     ('static/monitor.js', None)
