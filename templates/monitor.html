@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ config.OPENAPS.name }} — openaps monitor</title>
-  <link rel="stylesheet" href="static/bootstrap.css">
-  <link rel="stylesheet" href="static/styles.css">
+  {% for href in CSS_ASSETS.keys() %}
+    <link rel="stylesheet" href="{{ href }}" />
+  {% endfor %}
 </head>
 <body>
   <div class="container-fluid">
@@ -40,10 +41,9 @@
     </div>
   </div>
 
-  <script src="static/jquery.js"></script>
-  <script src="static/bootstrap.js"></script>
-  <script type="text/javascript" src="static/chart.js"></script>
-  <script type="text/javascript" src="static/monitor.js"></script>
+  {% for src in JS_ASSETS.keys() %}
+    <script type="text/javascript" src="{{ src }}"></script>
+  {% endfor %}
   <script type="text/javascript">
     (function () {
       var dateMin;

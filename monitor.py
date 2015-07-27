@@ -34,35 +34,37 @@ def monitor():
         glucose_cols=glucose_cols,
         glucose_rows=glucose_rows,
         history_cols=history_cols,
-        history_rows=history_rows
+        history_rows=history_rows,
+        CSS_ASSETS=CSS_ASSETS,
+        JS_ASSETS=JS_ASSETS
     )
 
 
 CSS_ASSETS = {
-    'bootstrap.css': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
-    'styles.css': None
+    'static/bootstrap.css': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
+    'static/styles.css': None
 }
 
 
 JS_ASSETS = {
-    'bootstrap.js': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
-    'chart.js': 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js',
-    'jquery.js': 'https://code.jquery.com/jquery-2.1.4.min.js',
-    'monitor.js': None
+    'static/bootstrap.js': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
+    'static/chart.js': 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
+                       'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js',
+    'static/jquery.js': 'https://code.jquery.com/jquery-2.1.4.min.js',
+    'static/monitor.js': None
 }
 
 
 def preload_assets():
     for filename, url in JS_ASSETS.items() + CSS_ASSETS.items():
-        fpath = 'static/{}'.format(filename)
-        if not os.path.exists(fpath):
+        if not os.path.exists(filename):
             print '{} not found, downloading from {}'.format(filename, url)
             try:
                 contents = urllib2.urlopen(url).read()
             except ValueError, urllib2.HTTPError:
                 pass
             else:
-                with open(fpath, mode='w') as fp:
+                with open(filename, mode='w') as fp:
                     fp.write(contents)
 
 
