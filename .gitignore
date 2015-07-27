@@ -56,3 +56,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Third-party asset cache
+bootstrap.css
+bootstrap.js
+chart.js
+jquery.js

@@ -1,4 +1,5 @@
 import os
+import urllib2
 import sys
 
 from flask import Flask, render_template
@@ -37,6 +38,34 @@ def monitor():
     )
 
 
+CSS_ASSETS = {
+    'bootstrap.css': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
+    'styles.css': None
+}
+
+
+JS_ASSETS = {
+    'bootstrap.js': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
+    'chart.js': 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js',
+    'jquery.js': 'https://code.jquery.com/jquery-2.1.4.min.js',
+    'monitor.js': None
+}
+
+
+def preload_assets():
+    for filename, url in JS_ASSETS.items() + CSS_ASSETS.items():
+        fpath = 'static/{}'.format(filename)
+        if not os.path.exists(fpath):
+            print '{} not found, downloading from {}'.format(filename, url)
+            try:
+                contents = urllib2.urlopen(url).read()
+            except ValueError, urllib2.HTTPError:
+                pass
+            else:
+                with open(fpath, mode='w') as fp:
+                    fp.write(contents)
+
+
 if __name__ == '__main__':
     path = sys.argv[1]
 
@@ -45,5 +74,7 @@ if __name__ == '__main__':
         app.config['OPENAPS'] = OpenAPS(path)
         app.debug = True
         app.run(host='0.0.0.0')
+
+        preload_assets()
     else:
         exit(1)
