@@ -1,4 +1,5 @@
 import os
+import urllib2
 import sys
 
 from flask import Flask, render_template
@@ -33,12 +34,50 @@ def monitor():
         glucose_cols=glucose_cols,
         glucose_rows=glucose_rows,
         history_cols=history_cols,
-        history_rows=history_rows
+        history_rows=history_rows,
+        CSS_ASSETS=CSS_ASSETS,
+        JS_ASSETS=JS_ASSETS
     )
+
+
+CSS_ASSETS = (
+    ('static/bootstrap.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'),
+    ('static/tooltip.css', 'https://ajax.googleapis.com/ajax/static/modules/gviz/1.0/core/tooltip.css'),
+    ('static/styles.css', None)
+)
+
+
+FONT_ASSETS = (
+    ('static/Roboto.ttf', 'http://fonts.gstatic.com/s/roboto2/v5/Nd9v8a6GbXQiNddD22JCiwLUuEpTyoUstqEm5AMlJo4.ttf'),
+)
+
+
+JS_ASSETS = (
+    ('static/jquery.js', 'https://code.jquery.com/jquery-2.1.4.min.js'),
+    ('static/bootstrap.js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'),
+    ('static/jsapi.js', 'https://www.google.com/jsapi'),
+    ('static/chart.js', 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
+                        'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js'),
+    ('static/monitor.js', None)
+)
+
+
+def preload_assets():
+    for filename, url in (JS_ASSETS + CSS_ASSETS + FONT_ASSETS):
+        if not os.path.exists(filename):
+            print '{} not found, downloading from {}'.format(filename, url)
+            try:
+                contents = urllib2.urlopen(url).read()
+            except ValueError, urllib2.HTTPError:
+                pass
+            else:
+                with open(filename, mode='w') as fp:
+                    fp.write(contents)
 
 
 if __name__ == '__main__':
     path = sys.argv[1]
+    preload_assets()
 
     if os.path.exists(path):
         path = os.path.abspath(path)

@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ config.OPENAPS.name }} — openaps monitor</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" href="static/styles.css">
+  {% for href, _ in CSS_ASSETS %}
+    <link rel="stylesheet" href="{{ href }}" />
+  {% endfor %}
 </head>
 <body>
   <div class="container-fluid">
@@ -40,10 +41,9 @@
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['corechart','line']}]}"></script>
-  <script type="text/javascript" src="static/monitor.js"></script>
+  {% for src, _ in JS_ASSETS %}
+    <script type="text/javascript" src="{{ src }}"></script>
+  {% endfor %}
   <script type="text/javascript">
     (function () {
       var dateMin;

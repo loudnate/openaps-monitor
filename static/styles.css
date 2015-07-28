@@ -21,3 +21,10 @@ pre code {
         -webkit-overflow-scrolling: touch;
     }
 }
+
+@font-face {
+  font-family: 'Roboto2';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto2-Regular'), url(Roboto.ttf) format('truetype');
+}
