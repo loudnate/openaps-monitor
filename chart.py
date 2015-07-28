@@ -12,8 +12,8 @@ def glucose_row(date, amount, targets, predicted=False):
         {'v': date},
         {'v': amount},
         {'v': not predicted},
-        {'v': target['low']},
-        {'v': target['high']},
+        {'v': target.get('low')},
+        {'v': target.get('high')},
         {'v': '{} – {}{:.0f} mg/dL'.format(time.strftime('%I:%M %p'), title, round(amount))}
     ]}
 
