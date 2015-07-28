@@ -48,7 +48,7 @@ CSS_ASSETS = (
 
 
 FONT_ASSETS = (
-    ('static/Roboto.ttf', 'http://fonts.gstatic.com/s/roboto2/v5/Nd9v8a6GbXQiNddD22JCiwLUuEpTyoUstqEm5AMlJo4.ttf')
+    ('static/Roboto.ttf', 'http://fonts.gstatic.com/s/roboto2/v5/Nd9v8a6GbXQiNddD22JCiwLUuEpTyoUstqEm5AMlJo4.ttf'),
 )
 
 
@@ -63,7 +63,7 @@ JS_ASSETS = (
 
 
 def preload_assets():
-    for filename, url in JS_ASSETS + CSS_ASSETS + FONT_ASSETS:
+    for filename, url in (JS_ASSETS + CSS_ASSETS + FONT_ASSETS):
         if not os.path.exists(filename):
             print '{} not found, downloading from {}'.format(filename, url)
             try:
