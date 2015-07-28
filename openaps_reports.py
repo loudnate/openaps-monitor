@@ -68,13 +68,13 @@ class OpenAPS(object):
         try:
             with open(self._get_report_path(filename)) as fp:
                 return json.load(fp)
-        except ValueError:
+        except (IOError, ValueError):
             return default
 
     # Reports #############################
 
     def read_bg_targets(self):
-        return self._read_json(ReportFile.READ_BG_TARGETS, {})
+        return self._read_json(ReportFile.READ_BG_TARGETS, {'targets': []})
 
     def predicted_glucose(self):
         return self._read_json(ReportFile.PREDICT_GLUCOSE, [])
@@ -86,10 +86,13 @@ class OpenAPS(object):
         return self._read_json(ReportFile.NORMALIZE_HISTORY, [])
 
     def recent_dose(self):
-        set_dose_timestamp = os.path.getmtime(self._get_report_path(ReportFile.SET_DOSE))
-        history_timestamp = os.path.getmtime(self._get_report_path(ReportFile.NORMALIZE_HISTORY))
-
-        if set_dose_timestamp > history_timestamp:
-            return self._read_json(ReportFile.SET_DOSE, [])
+        try:
+            set_dose_timestamp = os.path.getmtime(self._get_report_path(ReportFile.SET_DOSE))
+            history_timestamp = os.path.getmtime(self._get_report_path(ReportFile.NORMALIZE_HISTORY))
+        except OSError:
+            pass
+        else:
+            if set_dose_timestamp > history_timestamp:
+                return self._read_json(ReportFile.SET_DOSE, [])
 
         return []
