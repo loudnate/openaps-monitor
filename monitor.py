@@ -42,7 +42,13 @@ def monitor():
 
 CSS_ASSETS = (
     ('static/bootstrap.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'),
+    ('static/tooltip.css', 'https://ajax.googleapis.com/ajax/static/modules/gviz/1.0/core/tooltip.css'),
     ('static/styles.css', None)
+)
+
+
+FONT_ASSETS = (
+    ('static/Roboto.ttf', 'http://fonts.gstatic.com/s/roboto2/v5/Nd9v8a6GbXQiNddD22JCiwLUuEpTyoUstqEm5AMlJo4.ttf')
 )
 
 
@@ -57,7 +63,7 @@ JS_ASSETS = (
 
 
 def preload_assets():
-    for filename, url in JS_ASSETS + CSS_ASSETS:
+    for filename, url in JS_ASSETS + CSS_ASSETS + FONT_ASSETS:
         if not os.path.exists(filename):
             print '{} not found, downloading from {}'.format(filename, url)
             try:
@@ -71,13 +77,12 @@ def preload_assets():
 
 if __name__ == '__main__':
     path = sys.argv[1]
+    preload_assets()
 
     if os.path.exists(path):
         path = os.path.abspath(path)
         app.config['OPENAPS'] = OpenAPS(path)
         app.debug = True
         app.run(host='0.0.0.0')
-
-        preload_assets()
     else:
         exit(1)
