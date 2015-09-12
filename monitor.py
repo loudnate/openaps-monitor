@@ -9,11 +9,10 @@ from openapscontrib.predict.predict import Schedule
 from chart import glucose_line_chart
 from chart import input_history_area_chart
 
-from openaps_reports import OpenAPS
+from openaps_reports import OpenAPS, Settings
 
 
 app = Flask(__name__)
-
 
 @app.route('/')
 def monitor():
@@ -25,8 +24,8 @@ def monitor():
     normalized_history = aps.normalized_history()
     recent_dose = aps.recent_dose()
 
-    glucose_cols, glucose_rows = glucose_line_chart(recent_glucose, predicted_glucose, targets)
-    history_cols, history_rows = input_history_area_chart(normalized_history)
+    glucose_cols, glucose_rows = glucose_line_chart(recent_glucose, predicted_glucose, targets, Settings.DISPLAY_UNIT)
+    history_cols, history_rows = input_history_area_chart(normalized_history, Settings.DISPLAY_UNIT)
 
     return render_template(
         'monitor.html',
@@ -36,7 +35,8 @@ def monitor():
         history_cols=history_cols,
         history_rows=history_rows,
         CSS_ASSETS=CSS_ASSETS,
-        JS_ASSETS=JS_ASSETS
+        JS_ASSETS=JS_ASSETS,
+        display_unit=Settings.DISPLAY_UNIT
     )
 
 
