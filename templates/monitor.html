@@ -49,7 +49,7 @@
       var dateMin;
       var isMaterial = false;
 
-      var glucoseChart = new GlucoseLineChart({{ glucose_cols|tojson|safe }}, {{ glucose_rows|tojson|safe }}, document.getElementById('glucose_chart'), false);
+      var glucoseChart = new GlucoseLineChart({{ glucose_cols|tojson|safe }}, {{ glucose_rows|tojson|safe }}, document.getElementById('glucose_chart'), false, "{{ display_unit }}");
       var inputChart = new InputAreaChart({{ history_cols|tojson|safe }}, {{ history_rows|tojson|safe }}, document.getElementById('input_chart'), false);
 
       // Extend and match the x-axis values

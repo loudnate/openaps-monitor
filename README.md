@@ -28,11 +28,11 @@ From a web browser, check that the server is running by entering the hostname of
 
 ## Customizing the monitor to graph report data
 
-If you'd like to graph your report data, you can set the path names of your reports in the `ReportFile` class.
+If you'd like to graph your report data, you can set the path names of your reports in the `Settings` class.
 _TODO: This should probably be moved to a separate python file, maybe also a subclass?_
 
 ```python
-class ReportFile(object):
+class Settings(object):
     """Defines file names relative to the openaps path containing report data to display"""
 
     # A report containing glucose data in reverse-chronological order. Each entry should contain both a local timestamp
