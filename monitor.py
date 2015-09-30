@@ -22,10 +22,11 @@ def monitor():
     predicted_glucose = aps.predicted_glucose()
     targets = Schedule(aps.read_bg_targets()['targets'])
     normalized_history = aps.normalized_history()
+    iob = aps.iob()
     recent_dose = aps.recent_dose()
 
     glucose_cols, glucose_rows = glucose_line_chart(recent_glucose, predicted_glucose, targets, Settings.DISPLAY_UNIT)
-    history_cols, history_rows = input_history_area_chart(normalized_history, Settings.DISPLAY_UNIT)
+    history_cols, history_rows = input_history_area_chart(normalized_history, iob, Settings.DISPLAY_UNIT)
 
     return render_template(
         'monitor.html',

@@ -22,6 +22,14 @@ class Settings(object):
     # }
     CLEAN_GLUCOSE = 'clean_glucose.json'
 
+    # A report containing IOB levels in chronological order. Each entry should contain a local timestamp and an IOB value:
+    # {
+    #   "date": "<ISO date string>",
+    #   "amount": 1.0
+    #   "unit": "U"
+    # }
+    IOB = 'iob_list.json'
+
     # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
     # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
     NORMALIZE_HISTORY = 'normalize_history.json'
@@ -98,3 +106,6 @@ class OpenAPS(object):
                 return self._read_json(Settings.SET_DOSE, [])
 
         return []
+
+    def iob(self):
+        return self._read_json(Settings.IOB, [])
