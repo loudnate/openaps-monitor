@@ -130,7 +130,7 @@ def input_history_area_chart(normalized_history, iob, display_unit):
             row += [{'v': None}] * 8
             row.append({'v': entry['amount']})
 
-            tooltip = '{} – IOB {}{}'.format(
+            tooltip = '{} – IOB {:.3f}{}'.format(
                 parse(entry['date']).time().strftime('%I:%M %p'),
                 entry['amount'],
                 entry['unit']
