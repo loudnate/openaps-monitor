@@ -1,12 +1,22 @@
 # coding=utf-8
 from dateutil.parser import parse
 
+# How to convert from mg/dL (US format) to mmol/L (non-US format)
+MMOLL_CONVERT_FACTOR = 1.0 / 18.0
 
-def glucose_row(date, amount, targets, predicted=False):
+def glucose_row(date, amount, targets, display_unit, predicted=False):
+    assert(display_unit in ['mmol/L', 'mg/dL'])
+
     time = parse(date).time()
     target = targets.at(time)
 
     title = 'Predicted: ' if predicted else ''
+
+    if display_unit == 'mmol/L':
+        amount = amount * MMOLL_CONVERT_FACTOR
+        format_string = '{} – {}{:.1f} {}'
+    else:
+        format_string = '{} – {}{:.0f} {}'
 
     return {'c': [
         {'v': date},
@@ -14,11 +24,11 @@ def glucose_row(date, amount, targets, predicted=False):
         {'v': not predicted},
         {'v': target.get('low')},
         {'v': target.get('high')},
-        {'v': '{} – {}{:.0f} mg/dL'.format(time.strftime('%I:%M %p'), title, round(amount))}
+        {'v': format_string.format(time.strftime('%I:%M %p'), title, amount, display_unit)}
     ]}
 
 
-def glucose_line_chart(recent_glucose, predicted_glucose, targets):
+def glucose_line_chart(recent_glucose, predicted_glucose, targets, display_unit):
     # https://developers.google.com/chart/interactive/docs/reference#dataparam
 
     cols = [{'type': 'date', 'label': 'Date'}]
@@ -34,19 +44,26 @@ def glucose_line_chart(recent_glucose, predicted_glucose, targets):
         ])
 
         for entry in reversed(recent_glucose):
+            glucose = entry.get('sgv') or entry.get('amount') or entry.get('glucose')
+            if not glucose:
+                continue
+
             rows.append(glucose_row(
                 entry.get('date') or entry['display_time'],
-                entry.get('sgv') or entry.get('amount') or entry['glucose'],
-                targets
+                glucose,
+                targets,
+                display_unit
             ))
 
-        for entry in predicted_glucose:
-            rows.append(glucose_row(entry['date'], entry['glucose'], targets, 'Predicted: '))
+        for entry in predicted_glucose[1:]:
+            rows.append(glucose_row(entry['date'], entry['glucose'], targets, display_unit, 'Predicted: '))
 
     return cols, rows
 
 
-def input_history_area_chart(normalized_history):
+def input_history_area_chart(normalized_history, iob, display_unit):
+    assert(display_unit in ['mmol/L', 'mg/dL'])
+
     cols = [{'type': 'date', 'label': 'Date'}]
     rows = []
 
@@ -59,6 +76,8 @@ def input_history_area_chart(normalized_history):
             {'type': 'number', 'label': 'Bolus Insulin'},
             {'type': 'string', 'role': 'tooltip'},
             {'type': 'number', 'label': 'Meal carbs'},
+            {'type': 'string', 'role': 'tooltip'},
+            {'type': 'number', 'label': 'IOB'},
             {'type': 'string', 'role': 'tooltip'}
         ])
 
@@ -77,6 +96,9 @@ def input_history_area_chart(normalized_history):
                 else:
                     amount = None
                     tooltip = ''
+
+                if amount and display_unit == 'mmol/L':
+                    amount = amount * MMOLL_CONVERT_FACTOR
 
                 values = [None] * 4
 
@@ -98,7 +120,23 @@ def input_history_area_chart(normalized_history):
                     {'v': values[2]},
                     {'v': tooltip},
                     {'v': values[3]},
-                    {'v': tooltip}
+                    {'v': tooltip},
+                    {'v': None},
+                    {'v': None}
                 ]})
+
+        for entry in iob:
+            row = [{'v': entry['date']}]
+            row += [{'v': None}] * 8
+            row.append({'v': entry['amount']})
+
+            tooltip = '{} – IOB {:.3f}{}'.format(
+                parse(entry['date']).time().strftime('%I:%M %p'),
+                entry['amount'],
+                entry['unit']
+            )
+            row.append({'v': tooltip})
+
+            rows.append({'c': row})
 
     return cols, rows

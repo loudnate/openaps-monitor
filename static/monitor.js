@@ -37,11 +37,11 @@
      * @param {boolean=} isMaterial
      * @constructor
      */
-    var GlucoseLineChart = function(cols, rows, element, isMaterial) {
+    var GlucoseLineChart = function(cols, rows, element, isMaterial, display_unit) {
         this.height = parseInt(getComputedStyle(element)['height']);
 
         this.dataTable = this.buildDataTable(cols, rows);
-        this.options = this.buildOptions(this.dataTable, isMaterial);
+        this.options = this.buildOptions(this.dataTable, isMaterial, display_unit);
         var chartConstructor = isMaterial ? google.charts.Line : google.visualization.LineChart;
 
         this.chart = new chartConstructor(element);
@@ -55,14 +55,19 @@
         return new google.visualization.DataTable({cols: cols, rows: mapRows(rows)});
     };
 
-    GlucoseLineChart.prototype.buildOptions = function(dataTable, isMaterial) {
+    GlucoseLineChart.prototype.buildOptions = function(dataTable, isMaterial, display_unit) {
         var options = defaultOptions(dataTable, this.height, isMaterial);
 
         options.curveType = 'function';
         options.interval = {};
         options.intervals = { 'style': 'area' };
         options.titlePosition = 'in';
-        options.vAxis = { minValue: 70 };
+
+        if (display_unit == 'mmol/L') {
+          options.vAxis = { minValue: 4 };
+        } else {
+          options.vAxis = { minValue: 70 };
+        }
 
         if (isMaterial) {
             options = google.charts.Line.convertOptions(options);
@@ -105,6 +110,7 @@
             1: { targetAxisIndex: 0 },
             2: { targetAxisIndex: 0 },
             3: { targetAxisIndex: 1 },
+            4: { targetAxisIndex: 0 },
             vAxes: {
                 1: { textPosition: 'in' }
             }

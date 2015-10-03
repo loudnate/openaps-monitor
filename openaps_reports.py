@@ -8,8 +8,11 @@ import json
 import os
 
 
-class ReportFile(object):
-    """Defines file names relative to the openaps path containing report data to display"""
+class Settings(object):
+    """Filenames containing report data are relative to the openaps path"""
+
+    # What glucose measurement scale should we use. Use "mg/dL" for USA, otherwise "mmol/L"
+    DISPLAY_UNIT = "mg/dL"
 
     # A report containing glucose data in reverse-chronological order. Each entry should contain both a local timestamp
     # and a glucose value:
@@ -18,6 +21,14 @@ class ReportFile(object):
     #   "sgv" | "amount" | "glucose" : 100
     # }
     CLEAN_GLUCOSE = 'clean_glucose.json'
+
+    # A report containing IOB levels in chronological order. Each entry should contain a local timestamp and an IOB value:
+    # {
+    #   "date": "<ISO date string>",
+    #   "amount": 1.0
+    #   "unit": "U"
+    # }
+    IOB = 'iob_list.json'
 
     # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
     # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
@@ -36,7 +47,6 @@ class ReportFile(object):
 
     # A report containing the last-applied doses, if not yet present in the `NORMALIZE_HISTORY` report.
     SET_DOSE = 'set_dose.json'
-
 
 class OpenAPS(object):
     def __init__(self, path):
@@ -74,25 +84,28 @@ class OpenAPS(object):
     # Reports #############################
 
     def read_bg_targets(self):
-        return self._read_json(ReportFile.READ_BG_TARGETS, {'targets': []})
+        return self._read_json(Settings.READ_BG_TARGETS, {'targets': []})
 
     def predicted_glucose(self):
-        return self._read_json(ReportFile.PREDICT_GLUCOSE, [])
+        return self._read_json(Settings.PREDICT_GLUCOSE, [])
 
     def recent_glucose(self):
-        return self._read_json(ReportFile.CLEAN_GLUCOSE, [])
+        return self._read_json(Settings.CLEAN_GLUCOSE, [])
 
     def normalized_history(self):
-        return self._read_json(ReportFile.NORMALIZE_HISTORY, [])
+        return self._read_json(Settings.NORMALIZE_HISTORY, [])
 
     def recent_dose(self):
         try:
-            set_dose_timestamp = os.path.getmtime(self._get_report_path(ReportFile.SET_DOSE))
-            history_timestamp = os.path.getmtime(self._get_report_path(ReportFile.NORMALIZE_HISTORY))
+            set_dose_timestamp = os.path.getmtime(self._get_report_path(Settings.SET_DOSE))
+            history_timestamp = os.path.getmtime(self._get_report_path(Settings.NORMALIZE_HISTORY))
         except OSError:
             pass
         else:
             if set_dose_timestamp > history_timestamp:
-                return self._read_json(ReportFile.SET_DOSE, [])
+                return self._read_json(Settings.SET_DOSE, [])
 
         return []
+
+    def iob(self):
+        return self._read_json(Settings.IOB, [])
