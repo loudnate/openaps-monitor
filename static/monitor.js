@@ -110,6 +110,7 @@
             1: { targetAxisIndex: 0 },
             2: { targetAxisIndex: 0 },
             3: { targetAxisIndex: 1 },
+            4: { targetAxisIndex: 0 },
             vAxes: {
                 1: { textPosition: 'in' }
             }
