@@ -8,6 +8,7 @@ from openapscontrib.predict.predict import Schedule
 
 from chart import glucose_line_chart
 from chart import input_history_area_chart
+from highchart import glucose_line_chart as glucose_line_chart_new
 
 from openaps_reports import OpenAPS, Settings
 
@@ -35,6 +36,8 @@ def monitor():
         glucose_rows=glucose_rows,
         history_cols=history_cols,
         history_rows=history_rows,
+        actual_glucose=glucose_line_chart_new(reversed(recent_glucose)),
+        predicted_glucose=glucose_line_chart_new(predicted_glucose),
         CSS_ASSETS=CSS_ASSETS,
         JS_ASSETS=JS_ASSETS,
         display_unit=Settings.DISPLAY_UNIT
@@ -42,24 +45,25 @@ def monitor():
 
 
 CSS_ASSETS = (
-    ('static/bootstrap.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'),
-    ('static/tooltip.css', 'https://ajax.googleapis.com/ajax/static/modules/gviz/1.0/core/tooltip.css'),
+    ('static/third_party/bootstrap.css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'),
+    ('static/third_party/tooltip.css', 'https://ajax.googleapis.com/ajax/static/modules/gviz/1.0/core/tooltip.css'),
     ('static/styles.css', None)
 )
 
 
 FONT_ASSETS = (
-    ('static/Roboto.ttf', 'http://fonts.gstatic.com/s/roboto2/v5/Nd9v8a6GbXQiNddD22JCiwLUuEpTyoUstqEm5AMlJo4.ttf'),
+    ('static/third_party/Roboto.ttf', 'http://fonts.gstatic.com/s/roboto2/v5/Nd9v8a6GbXQiNddD22JCiwLUuEpTyoUstqEm5AMlJo4.ttf'),
 )
 
 
 JS_ASSETS = (
-    ('static/jquery.js', 'https://code.jquery.com/jquery-2.1.4.min.js'),
-    ('static/bootstrap.js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'),
-    ('static/jsapi.js', 'https://www.google.com/jsapi'),
-    ('static/chart.js', 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
+    ('static/third_party/jquery.js', 'https://code.jquery.com/jquery-2.1.4.min.js'),
+    ('static/third_party/bootstrap.js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'),
+    ('static/third_party/jsapi.js', 'https://www.google.com/jsapi'),
+    ('static/third_party/chart.js', 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
                         'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js'),
-    ('static/monitor.js', None)
+    ('static/monitor.js', None),
+    ('static/third_party/highcharts.js', 'http://code.highcharts.com/highcharts.js')
 )
 
 
@@ -72,6 +76,11 @@ def preload_assets():
             except ValueError, urllib2.HTTPError:
                 pass
             else:
+                try:
+                    os.makedirs(os.path.dirname(filename))
+                except os.error:
+                    pass
+
                 with open(filename, mode='w') as fp:
                     fp.write(contents)
 

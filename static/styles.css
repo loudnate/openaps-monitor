@@ -10,6 +10,11 @@ pre code {
     height: 400px;
 }
 
+#glucose_chart_new {
+    height: 400px;
+    width: 100%;
+}
+
 #input_chart {
     height: 100px;
 }
@@ -26,5 +31,5 @@ pre code {
   font-family: 'Roboto2';
   font-style: normal;
   font-weight: 400;
-  src: local('Roboto'), local('Roboto2-Regular'), url(Roboto.ttf) format('truetype');
+  src: local('Roboto'), local('Roboto2-Regular'), url(third_party/Roboto.ttf) format('truetype');
 }

@@ -77,6 +77,105 @@
     };
 
     /**
+     * Creates the configuration options for displaying glucose values in a Highcharts line graph
+     *
+     * http://api.highcharts.com/highcharts
+     */
+    var GlucoseLineHighchart = function(actual_glucose, predicted_glucose, displayUnit) {
+        var actual_data = this.mapRows(actual_glucose);
+        var predicted_data = this.mapRows(predicted_glucose);
+
+        if (displayUnit == "mmol/L") {
+            var minValue = 4;
+        } else {
+            var minValue = 70;
+        }
+
+        this.options = {
+            chart: {
+                type: 'line'
+            },
+            legend: {
+                enabled: false
+            },
+            title: {
+                text: null
+            },
+            xAxis: {
+                gridLineWidth: 1,
+                minTickInterval: 60*60*1000,
+                tickWidth: 0,
+                type: 'datetime',
+                labels: {
+                    format: "{value:%l %p}"
+                }
+            },
+            yAxis: {
+                min: minValue,
+                startOnTick: true,
+                endOnTick: true,
+                title: null
+            },
+            series: [
+                {
+                    data: actual_data,
+                    lineWidth: 1,
+                    marker: {
+                        enabled: true,
+                        lineColor: Highcharts.getOptions().colors[0],
+                        states: {
+                            hover: {
+                                enabled: false,
+                                radius: 0
+                            }
+                        }
+                    },
+                    name: "Glucose",
+                    tooltip: {
+                        xDateFormat: "%Y"
+                    }
+                },
+                {
+                    color: Highcharts.getOptions().colors[0],
+                    data: predicted_data,
+                    dashStyle: "Dash",
+                    marker: {
+                        enabled: false
+                    },
+                    name: "Predicted",
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false,
+                                radius: 0
+                            }
+                        }
+                    },
+                    tooltip: {
+                        xDateFormat: "%Y"
+                    }
+                }
+            ],
+            tooltip: {
+                shared: true,
+                valueDecimals: 0,
+                valueSuffix: ' mg/dL',
+                xDateFormat: "%Y"
+            }
+        }
+    };
+
+    GlucoseLineHighchart.prototype.mapRows = function(rows) {
+        var timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
+
+        for (var r = 0; r < rows.length; r++) {
+            rows[r]['x'] = new Date(Date.parse(rows[r]['x']));
+        }
+
+        return rows
+    };
+
+    /**
      *
      * @param {!Object} cols
      * @param {!Object} rows
@@ -105,7 +204,6 @@
         var options = defaultOptions(dataTable, this.height);
 
         options.series = {
-
             0: { targetAxisIndex: 0 },
             1: { targetAxisIndex: 0 },
             2: { targetAxisIndex: 0 },
@@ -121,5 +219,6 @@
 
     // Exports
     global.GlucoseLineChart = GlucoseLineChart;
+    global.GlucoseLineHighchart = GlucoseLineHighchart;
     global.InputAreaChart = InputAreaChart;
 })(window);
