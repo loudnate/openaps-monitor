@@ -82,6 +82,14 @@
      * http://api.highcharts.com/highcharts
      */
     var GlucoseLineHighchart = function(actual_glucose, predicted_glucose, displayUnit) {
+        Highcharts.setOptions({
+            chart: {
+                style: {
+                    fontFamily: '-apple-system, sans-serif'
+                }
+            }
+        });
+
         var actual_data = this.mapRows(actual_glucose);
         var predicted_data = this.mapRows(predicted_glucose);
 
