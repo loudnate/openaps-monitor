@@ -56,7 +56,8 @@ def glucose_line_chart(recent_glucose, predicted_glucose, targets, display_unit)
             ))
 
         for entry in predicted_glucose[1:]:
-            rows.append(glucose_row(entry['date'], entry['glucose'], targets, display_unit, 'Predicted: '))
+            glucose = entry.get('amount') or entry.get('glucose')
+            rows.append(glucose_row(entry['date'], glucose, targets, display_unit, 'Predicted: '))
 
     return cols, rows
 
