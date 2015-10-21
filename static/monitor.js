@@ -4,7 +4,7 @@
 
     function mapRows(rows) {
         // Convert the first column in each row to a date
-        var timeZoneOffset = 0; // (new Date()).getTimezoneOffset() * 60000;
+        var timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
         for (var r = 0; r < rows.length; r++) {
             rows[r]['c'][0]['v'] = new Date(Date.parse(rows[r]['c'][0]['v']) + timeZoneOffset);
         }
