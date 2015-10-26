@@ -8,7 +8,8 @@ from openapscontrib.predict.predict import Schedule
 
 from chart import glucose_line_chart
 from chart import input_history_area_chart
-from highchart import glucose_line_chart as glucose_line_chart_new
+from highchart import glucose_line_chart
+from highchart import glucose_target_range_chart
 
 from openaps_reports import OpenAPS, Settings
 
@@ -26,18 +27,18 @@ def monitor():
     iob = aps.iob()
     recent_dose = aps.recent_dose()
 
-    glucose_cols, glucose_rows = glucose_line_chart(recent_glucose, predicted_glucose, targets, Settings.DISPLAY_UNIT)
     history_cols, history_rows = input_history_area_chart(normalized_history, iob, Settings.DISPLAY_UNIT)
+    actual_glucose = glucose_line_chart(reversed(recent_glucose))
+    predicted_glucose = glucose_line_chart(predicted_glucose)
 
     return render_template(
         'monitor.html',
         openaps=aps,
-        glucose_cols=glucose_cols,
-        glucose_rows=glucose_rows,
         history_cols=history_cols,
         history_rows=history_rows,
-        actual_glucose=glucose_line_chart_new(reversed(recent_glucose)),
-        predicted_glucose=glucose_line_chart_new(predicted_glucose),
+        actual_glucose=actual_glucose,
+        predicted_glucose=predicted_glucose,
+        target_glucose=glucose_target_range_chart(targets, actual_glucose[0]['x'], predicted_glucose[-1]['x']),
         CSS_ASSETS=CSS_ASSETS,
         JS_ASSETS=JS_ASSETS,
         display_unit=Settings.DISPLAY_UNIT
@@ -63,7 +64,8 @@ JS_ASSETS = (
     ('static/third_party/chart.js', 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
                         'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js'),
     ('static/monitor.js', None),
-    ('static/third_party/highcharts.js', 'http://code.highcharts.com/highcharts.js')
+    ('static/third_party/highcharts.js', 'http://code.highcharts.com/highcharts.js'),
+    ('static/third_party/highcharts-more.js', 'http://code.highcharts.com/highcharts-more.js')
 )
 
 

@@ -15,7 +15,6 @@
     <h2>Timeline</h2>
 
     <div id="glucose_chart"></div>
-    <div id="glucose_chart_new"></div>
     <div id="input_chart"></div>
 
     <h2>Browse files</h2>
@@ -47,46 +46,22 @@
   {% endfor %}
   <script type="text/javascript">
     (function () {
-      var dateMin;
-      var isMaterial = false;
-      var displayUnit = "{{ display_unit }}";
-
-        if (displayUnit == "mmol/L") {
-            var minValue = 4;
-        } else {
-            var minValue = 70;
-        }
-
-      var glucoseChart = new GlucoseLineChart({{ glucose_cols|tojson|safe }}, {{ glucose_rows|tojson|safe }}, document.getElementById('glucose_chart'), false, displayUnit);
       var inputChart = new InputAreaChart({{ history_cols|tojson|safe }}, {{ history_rows|tojson|safe }}, document.getElementById('input_chart'), false);
 
-      // Extend and match the x-axis values
-      var glucoseRange = glucoseChart.dataTable.getColumnRange(0);
-      var inputRange = inputChart.dataTable.getColumnRange(0);
-      var now = new Date();
-
-      if (glucoseRange.min != null && inputRange.min != null) {
-        dateMin = new Date(Math.min(glucoseRange.min, inputRange.min));
-      } else {
-        dateMin = glucoseRange.min || inputRange.min;
-      }
-
-      var dateMax = new Date(Math.max(glucoseRange.max, inputRange.max));
-
-      glucoseChart.options.hAxis.viewWindow.max = dateMax;
-      glucoseChart.options.hAxis.viewWindow.min = dateMin;
-      inputChart.options.hAxis.viewWindow.max = dateMax;
-      inputChart.options.hAxis.viewWindow.min = dateMin;
-
-      glucoseChart.draw();
       inputChart.draw();
 
       window.addEventListener('resize', function() {
-        glucoseChart.draw();
         inputChart.draw();
       });
 
-        $('#glucose_chart_new').highcharts((new GlucoseLineHighchart({{ actual_glucose|tojson|safe }}, {{ predicted_glucose|tojson|safe }}, displayUnit)).options)
+        var glucoseChart = new GlucoseLineHighchart(
+            {{ actual_glucose|tojson|safe }}, 
+            {{ predicted_glucose|tojson|safe }},
+            {{ target_glucose|tojson|safe }},
+            '{{ display_unit }}'
+        );
+
+        $('#glucose_chart').highcharts(glucoseChart.options);
     })()
   </script>
 </body>

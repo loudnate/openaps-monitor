@@ -30,58 +30,11 @@
     }
 
     /**
-     *
-     * @param {!Object} cols
-     * @param {!Object} rows
-     * @param {!HTMLElement} element
-     * @param {boolean=} isMaterial
-     * @constructor
-     */
-    var GlucoseLineChart = function(cols, rows, element, isMaterial, display_unit) {
-        this.height = parseInt(getComputedStyle(element)['height']);
-
-        this.dataTable = this.buildDataTable(cols, rows);
-        this.options = this.buildOptions(this.dataTable, isMaterial, display_unit);
-        var chartConstructor = isMaterial ? google.charts.Line : google.visualization.LineChart;
-
-        this.chart = new chartConstructor(element);
-    };
-
-    GlucoseLineChart.prototype.draw = function() {
-        this.chart.draw(this.dataTable, this.options);
-    };
-
-    GlucoseLineChart.prototype.buildDataTable = function(cols, rows) {
-        return new google.visualization.DataTable({cols: cols, rows: mapRows(rows)});
-    };
-
-    GlucoseLineChart.prototype.buildOptions = function(dataTable, isMaterial, display_unit) {
-        var options = defaultOptions(dataTable, this.height, isMaterial);
-
-        options.curveType = 'function';
-        options.interval = {};
-        options.intervals = { 'style': 'area' };
-        options.titlePosition = 'in';
-
-        if (display_unit == 'mmol/L') {
-          options.vAxis = { minValue: 4 };
-        } else {
-          options.vAxis = { minValue: 70 };
-        }
-
-        if (isMaterial) {
-            options = google.charts.Line.convertOptions(options);
-        }
-
-        return options;
-    };
-
-    /**
      * Creates the configuration options for displaying glucose values in a Highcharts line graph
      *
      * http://api.highcharts.com/highcharts
      */
-    var GlucoseLineHighchart = function(actual_glucose, predicted_glucose, displayUnit) {
+    var GlucoseLineHighchart = function(actualGlucose, predictedGlucose, targetGlucose, displayUnit) {
         Highcharts.setOptions({
             chart: {
                 style: {
@@ -89,15 +42,6 @@
                 }
             }
         });
-
-        var actual_data = this.mapRows(actual_glucose);
-        var predicted_data = this.mapRows(predicted_glucose);
-
-        if (displayUnit == "mmol/L") {
-            var minValue = 4;
-        } else {
-            var minValue = 70;
-        }
 
         this.options = {
             chart: {
@@ -119,14 +63,13 @@
                 }
             },
             yAxis: {
-                min: minValue,
                 startOnTick: true,
                 endOnTick: true,
                 title: null
             },
             series: [
                 {
-                    data: actual_data,
+                    data: actualGlucose,
                     lineWidth: 1,
                     marker: {
                         enabled: true,
@@ -139,13 +82,10 @@
                         }
                     },
                     name: "Glucose",
-                    tooltip: {
-                        xDateFormat: "%Y"
-                    }
                 },
                 {
                     color: Highcharts.getOptions().colors[0],
-                    data: predicted_data,
+                    data: predictedGlucose,
                     dashStyle: "Dash",
                     marker: {
                         enabled: false
@@ -158,29 +98,26 @@
                                 radius: 0
                             }
                         }
-                    },
-                    tooltip: {
-                        xDateFormat: "%Y"
                     }
+                },
+                {
+                    color: Highcharts.getOptions().colors[0],
+                    data: targetGlucose,
+                    fillOpacity: 0.3,
+                    lineWidth: 0,
+                    linkedTo: ':previous',
+                    name: 'Targets',
+                    type: 'arearange',
+                    zIndex: 0
                 }
             ],
             tooltip: {
                 shared: true,
                 valueDecimals: 0,
-                valueSuffix: ' mg/dL',
-                xDateFormat: "%Y"
+                valueSuffix: ' ' + displayUnit,
+                xDateFormat: "%l:%M %p"
             }
         }
-    };
-
-    GlucoseLineHighchart.prototype.mapRows = function(rows) {
-        var timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
-
-        for (var r = 0; r < rows.length; r++) {
-            rows[r]['x'] = new Date(Date.parse(rows[r]['x']));
-        }
-
-        return rows
     };
 
     /**
@@ -226,7 +163,6 @@
     };
 
     // Exports
-    global.GlucoseLineChart = GlucoseLineChart;
     global.GlucoseLineHighchart = GlucoseLineHighchart;
     global.InputAreaChart = InputAreaChart;
 })(window);
