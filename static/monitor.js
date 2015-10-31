@@ -47,6 +47,9 @@
             chart: {
                 type: 'line'
             },
+            credits: {
+                enabled: false  
+            },
             legend: {
                 enabled: false
             },
@@ -54,6 +57,7 @@
                 text: null
             },
             xAxis: {
+                crosshair: true,
                 gridLineWidth: 1,
                 minTickInterval: 60*60*1000,
                 tickWidth: 0,
@@ -73,7 +77,6 @@
                     lineWidth: 1,
                     marker: {
                         enabled: true,
-                        lineColor: Highcharts.getOptions().colors[0],
                         states: {
                             hover: {
                                 enabled: false,
@@ -81,38 +84,47 @@
                             }
                         }
                     },
-                    name: "Glucose",
+                    name: "Glucose"
                 },
                 {
                     color: Highcharts.getOptions().colors[0],
                     data: predictedGlucose,
                     dashStyle: "Dash",
                     marker: {
-                        enabled: false
-                    },
-                    name: "Predicted",
-                    states: {
-                        hover: {
-                            marker: {
+                        enabled: false,
+                        states: {
+                            hover: {
                                 enabled: false,
                                 radius: 0
                             }
                         }
-                    }
+                    },
+                    name: "Predicted",
                 },
                 {
                     color: Highcharts.getOptions().colors[0],
                     data: targetGlucose,
                     fillOpacity: 0.3,
+                    followerPointer: false,
+                    followTouchMove: false,
                     lineWidth: 0,
-                    linkedTo: ':previous',
                     name: 'Targets',
+                    states: {
+                        hover: {
+                            enabled: false
+                        }
+                    },
+                    stickyTracking: false,
                     type: 'arearange',
                     zIndex: 0
                 }
             ],
             tooltip: {
-                shared: true,
+                borderWidth: 0,
+                positioner: function() {
+                    return { x: this.chart.chartWidth - this.label.width - 10, y: 1 }
+                },
+                shadow: false,
                 valueDecimals: 0,
                 valueSuffix: ' ' + displayUnit,
                 xDateFormat: "%l:%M %p"
