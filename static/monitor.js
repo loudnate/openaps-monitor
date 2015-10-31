@@ -30,50 +30,94 @@
     }
 
     /**
+     * Creates the configuration options for displaying glucose values in a Highcharts line graph
      *
-     * @param {!Object} cols
-     * @param {!Object} rows
-     * @param {!HTMLElement} element
-     * @param {boolean=} isMaterial
-     * @constructor
+     * http://api.highcharts.com/highcharts
      */
-    var GlucoseLineChart = function(cols, rows, element, isMaterial, display_unit) {
-        this.height = parseInt(getComputedStyle(element)['height']);
+    var GlucoseLineHighchart = function(actualGlucose, predictedGlucose, targetGlucose, displayUnit) {
+        Highcharts.setOptions({
+            chart: {
+                style: {
+                    fontFamily: '-apple-system, sans-serif'
+                }
+            }
+        });
 
-        this.dataTable = this.buildDataTable(cols, rows);
-        this.options = this.buildOptions(this.dataTable, isMaterial, display_unit);
-        var chartConstructor = isMaterial ? google.charts.Line : google.visualization.LineChart;
-
-        this.chart = new chartConstructor(element);
-    };
-
-    GlucoseLineChart.prototype.draw = function() {
-        this.chart.draw(this.dataTable, this.options);
-    };
-
-    GlucoseLineChart.prototype.buildDataTable = function(cols, rows) {
-        return new google.visualization.DataTable({cols: cols, rows: mapRows(rows)});
-    };
-
-    GlucoseLineChart.prototype.buildOptions = function(dataTable, isMaterial, display_unit) {
-        var options = defaultOptions(dataTable, this.height, isMaterial);
-
-        options.curveType = 'function';
-        options.interval = {};
-        options.intervals = { 'style': 'area' };
-        options.titlePosition = 'in';
-
-        if (display_unit == 'mmol/L') {
-          options.vAxis = { minValue: 4 };
-        } else {
-          options.vAxis = { minValue: 70 };
+        this.options = {
+            chart: {
+                type: 'line'
+            },
+            legend: {
+                enabled: false
+            },
+            title: {
+                text: null
+            },
+            xAxis: {
+                gridLineWidth: 1,
+                minTickInterval: 60*60*1000,
+                tickWidth: 0,
+                type: 'datetime',
+                labels: {
+                    format: "{value:%l %p}"
+                }
+            },
+            yAxis: {
+                startOnTick: true,
+                endOnTick: true,
+                title: null
+            },
+            series: [
+                {
+                    data: actualGlucose,
+                    lineWidth: 1,
+                    marker: {
+                        enabled: true,
+                        lineColor: Highcharts.getOptions().colors[0],
+                        states: {
+                            hover: {
+                                enabled: false,
+                                radius: 0
+                            }
+                        }
+                    },
+                    name: "Glucose",
+                },
+                {
+                    color: Highcharts.getOptions().colors[0],
+                    data: predictedGlucose,
+                    dashStyle: "Dash",
+                    marker: {
+                        enabled: false
+                    },
+                    name: "Predicted",
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false,
+                                radius: 0
+                            }
+                        }
+                    }
+                },
+                {
+                    color: Highcharts.getOptions().colors[0],
+                    data: targetGlucose,
+                    fillOpacity: 0.3,
+                    lineWidth: 0,
+                    linkedTo: ':previous',
+                    name: 'Targets',
+                    type: 'arearange',
+                    zIndex: 0
+                }
+            ],
+            tooltip: {
+                shared: true,
+                valueDecimals: 0,
+                valueSuffix: ' ' + displayUnit,
+                xDateFormat: "%l:%M %p"
+            }
         }
-
-        if (isMaterial) {
-            options = google.charts.Line.convertOptions(options);
-        }
-
-        return options;
     };
 
     /**
@@ -105,7 +149,6 @@
         var options = defaultOptions(dataTable, this.height);
 
         options.series = {
-
             0: { targetAxisIndex: 0 },
             1: { targetAxisIndex: 0 },
             2: { targetAxisIndex: 0 },
@@ -120,6 +163,6 @@
     };
 
     // Exports
-    global.GlucoseLineChart = GlucoseLineChart;
+    global.GlucoseLineHighchart = GlucoseLineHighchart;
     global.InputAreaChart = InputAreaChart;
 })(window);

@@ -1,3 +1,7 @@
+body {
+    font-family: -apple-system, sans-serif;
+}
+
 pre {
     overflow-x: auto;
 }
@@ -26,5 +30,5 @@ pre code {
   font-family: 'Roboto2';
   font-style: normal;
   font-weight: 400;
-  src: local('Roboto'), local('Roboto2-Regular'), url(Roboto.ttf) format('truetype');
+  src: local('Roboto'), local('Roboto2-Regular'), url(third_party/Roboto.ttf) format('truetype');
 }
