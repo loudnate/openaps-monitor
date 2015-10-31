@@ -7,9 +7,10 @@ from flask import Flask, render_template
 from openapscontrib.predict.predict import Schedule
 
 from chart import glucose_line_chart
-from chart import input_history_area_chart
-from highchart import glucose_line_chart
+from chart import input_history_area_chart as old_input_history_area_chart
 from highchart import glucose_target_range_chart
+from highchart import input_history_area_chart
+from highchart import line_chart
 
 from openaps_reports import OpenAPS, Settings
 
@@ -25,11 +26,11 @@ def monitor():
     targets = Schedule(aps.read_bg_targets()['targets'])
     normalized_history = aps.normalized_history()
     iob = aps.iob()
-    recent_dose = aps.recent_dose()
 
-    history_cols, history_rows = input_history_area_chart(normalized_history, iob, Settings.DISPLAY_UNIT)
-    actual_glucose = glucose_line_chart(reversed(recent_glucose))
-    predicted_glucose = glucose_line_chart(predicted_glucose)
+    history_cols, history_rows = old_input_history_area_chart(normalized_history, iob, Settings.DISPLAY_UNIT)
+    basal, bolus, carbs = input_history_area_chart(reversed(normalized_history))
+    actual_glucose = line_chart(reversed(recent_glucose))
+    predicted_glucose = line_chart(predicted_glucose)
 
     return render_template(
         'monitor.html',
@@ -39,6 +40,10 @@ def monitor():
         actual_glucose=actual_glucose,
         predicted_glucose=predicted_glucose,
         target_glucose=glucose_target_range_chart(targets, actual_glucose[0]['x'], predicted_glucose[-1]['x']),
+        iob=line_chart(iob),
+        basal=basal,
+        bolus=bolus,
+        carbs=carbs,
         CSS_ASSETS=CSS_ASSETS,
         JS_ASSETS=JS_ASSETS,
         display_unit=Settings.DISPLAY_UNIT
@@ -63,9 +68,9 @@ JS_ASSETS = (
     ('static/third_party/jsapi.js', 'https://www.google.com/jsapi'),
     ('static/third_party/chart.js', 'https://www.google.com/uds/api/visualization/1.1/9543863e4f7c29aa0bc62c0051a89a8a/'
                         'dygraph,webfontloader,format+en,default+en,ui+en,line+en,corechart+en.I.js'),
-    ('static/monitor.js', None),
     ('static/third_party/highcharts.js', 'http://code.highcharts.com/highcharts.js'),
-    ('static/third_party/highcharts-more.js', 'http://code.highcharts.com/highcharts-more.js')
+    ('static/third_party/highcharts-more.js', 'http://code.highcharts.com/highcharts-more.js'),
+    ('static/monitor.js', None),
 )
 
 

@@ -14,8 +14,11 @@
 
     <h2>Timeline</h2>
 
-    <div id="glucose_chart"></div>
-    <div id="input_chart"></div>
+    <div id="timeline">
+        <div id="glucose_chart"></div>
+        <div id="insulin_chart"></div>
+        <div id="input_chart"></div>
+    </div>
 
     <h2>Browse files</h2>
     <div class="row">
@@ -54,14 +57,22 @@
         inputChart.draw();
       });
 
-        var glucoseChart = new GlucoseLineHighchart(
+        Monitor.setupHighcharts();
+
+        $('#glucose_chart').highcharts(Monitor.GlucoseLineHighchart(
             {{ actual_glucose|tojson|safe }}, 
             {{ predicted_glucose|tojson|safe }},
             {{ target_glucose|tojson|safe }},
             '{{ display_unit }}'
-        );
+        ));
 
-        $('#glucose_chart').highcharts(glucoseChart.options);
+        $('#insulin_chart').highcharts(Monitor.InsulinAreaHighchart(
+            {{ iob|tojson|safe }},
+            {{ basal|tojson|safe }},
+            {{ bolus|tojson|safe }}
+        ));
+
+        Monitor.syncHighchartsMovementsInContainer($('#timeline'));
     })()
   </script>
 </body>

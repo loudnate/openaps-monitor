@@ -12,16 +12,16 @@ def timestamp(a_datetime):
     return int((a_datetime - datetime(1970,1,1)).total_seconds()) * 1000
 
 
-def glucose_line_chart(glucose):
+def line_chart(entries):
     rows = []
     
-    for entry in glucose:
+    for entry in entries:
         date = entry.get('date') or entry['display_time']
-        glucose = entry.get('sgv') or entry.get('amount') or entry.get('glucose')
+        amount = entry.get('sgv') or entry.get('amount') or entry.get('glucose')
     
         rows.append({
             'x': timestamp(parse(date)),
-            'y': glucose
+            'y': amount
         })
     
     return rows
@@ -50,3 +50,53 @@ def glucose_target_range_chart(targets, start_datetime, end_datetime):
     })
 
     return rows
+
+
+def input_history_area_chart(normalized_history):
+    basal = []
+    bolus = []
+    carbs = []
+
+    for entry in normalized_history:
+        if entry['unit'] == 'U/hour':
+            values = [
+                {
+                    'x': timestamp(parse(entry['start_at'])),
+                    'y': entry['amount']
+                },
+                {
+                    'x': timestamp(parse(entry['end_at'])),
+                    'y': entry['amount']
+                },
+                {
+                    'x': timestamp(parse(entry['end_at'])),
+                    'y': None
+                }
+            ]
+
+            if entry['type'] == 'TempBasal':
+                basal += values
+            else:
+                bolus += values
+        else:
+            values = [
+                {
+                    'x': timestamp(parse(entry['start_at'])),
+                    'y': entry['amount']
+                },
+                {
+                    'x': timestamp(parse(entry['end_at'])) + 60 * 1000,
+                    'y': entry['amount']
+                },
+                {
+                    'x': timestamp(parse(entry['end_at'])) + 60 * 1000,
+                    'y': None
+                },
+            ]
+
+            if entry['unit'] == 'U':
+                bolus += values
+            elif entry['unit'] == 'g':
+                carbs += values
+
+    return basal, bolus, carbs
