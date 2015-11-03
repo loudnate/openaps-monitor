@@ -28,7 +28,7 @@ def monitor():
     iob = aps.iob()
 
     history_cols, history_rows = old_input_history_area_chart(normalized_history, iob, Settings.DISPLAY_UNIT)
-    basal, bolus, carbs = input_history_area_chart(reversed(normalized_history))
+    basal, bolus, square, carbs = input_history_area_chart(reversed(normalized_history))
     actual_glucose = line_chart(reversed(recent_glucose))
     predicted_glucose = line_chart(predicted_glucose)
 
@@ -43,6 +43,7 @@ def monitor():
         iob=line_chart(iob),
         basal=basal,
         bolus=bolus,
+        square=square,
         carbs=carbs,
         CSS_ASSETS=CSS_ASSETS,
         JS_ASSETS=JS_ASSETS,

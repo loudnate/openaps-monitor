@@ -2,16 +2,6 @@
 (function(global) {
     'use strict';
 
-    function mapRows(rows) {
-        // Convert the first column in each row to a date
-        var timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
-        for (var r = 0; r < rows.length; r++) {
-            rows[r]['c'][0]['v'] = new Date(Date.parse(rows[r]['c'][0]['v']) + timeZoneOffset);
-        }
-
-        return rows;
-    }
-
     var M = {};
 
     M.syncExtremes = function (e) {
@@ -29,7 +19,7 @@
     M.setupHighcharts = function () {
         Highcharts.setOptions({
             chart: {
-                marginLeft: 40,
+                marginLeft: 44,
                 style: {
                     fontFamily: '-apple-system, sans-serif'
                 }
@@ -126,7 +116,71 @@
         };
     };
 
-    M.InsulinAreaHighchart = function(iob, basal, bolus) {
+    M.BasalAreaHighchart = function(basal, square) {
+        return {
+            chart: {
+                type: 'area'
+            },
+            series: [
+                {
+                    data: basal,
+                    marker: {
+                        enabled: false
+                    },
+                    name: "Temp Basal",
+                    step: "left"
+                },
+                {
+                    data: square,
+                    marker: {
+                        enabled: false
+                    },
+                    name: "Square Bolus",
+                    step: "left"
+                }
+            ],
+            tooltip: {
+                pointFormat: '<span style="color:{point.color}">\u25CF</span> {point.x:%l:%M %p}: <b>{point.y}</b><br/>',
+                valueDecimals: 3,
+                valueSuffix: ' U/hour'
+            },
+            yAxis: {
+                tickPixelInterval: 16
+            }
+        };
+    };
+
+    M.CarbsAreaHighchart = function(carbs) {
+        return {
+            chart: {
+                type: 'area'
+            },
+            series: [
+                {
+                    data: carbs,
+                    marker: {
+                        enabled: true
+                    },
+                    name: "Carbs",
+                    step: "left",
+                    tooltip: {
+                        valueSuffix: ' g',
+                        valueDecimals: 0
+                    }
+                }
+            ],
+            tooltip: {
+                pointFormat: '<span style="color:{point.color}">\u25CF</span> {point.x:%l:%M %p}: <b>{point.y}</b><br/>',
+                synced: true
+            },
+            yAxis: {
+                tickPixelInterval: 16
+            }
+        };
+    };
+
+    
+    M.IOBAreaHighchart = function(iob, bolus) {
         return {
             chart: {
                 type: 'area'
@@ -139,34 +193,25 @@
                     },
                     name: "IOB",
                     tooltip: {
+                        valueDecimals: 3,
                         valueSuffix: ' U'
-                    }
-                },
-                {
-                    data: basal,
-                    marker: {
-                        enabled: false
-                    },
-                    name: "Temp Basal",
-                    step: "left",
-                    tooltip: {
-                        valueSuffix: ' U/hour'
                     }
                 },
                 {
                     data: bolus,
                     marker: {
-                        enabled: false
+                        enabled: true
                     },
                     name: "Bolus",
                     step: "left",
                     tooltip: {
-                        valueSuffix: ' U'
+                        valueSuffix: ' U',
+                        valueDecimals: 3
                     }
                 }
             ],
-            tooltip: {
-                valueDecimals: 3
+            yAxis: {
+                tickPixelInterval: 16
             }
         };
     };
@@ -177,9 +222,11 @@
 
         Highcharts.each(Highcharts.charts, function (chart) {
             var extremes = chart.xAxis[0].getExtremes();
-
-            max = Math.max(max, extremes.max);
-            min = Math.min(min, extremes.min);
+            
+            if (extremes.max != undefined && extremes.min != undefined) {
+                max = Math.max(max, extremes.max);
+                min = Math.min(min, extremes.min);   
+            }
         });
 
         Highcharts.charts[0].xAxis[0].setExtremes(min, max, true, false);
@@ -198,7 +245,7 @@
                 for (j = 0; j < chart.series.length; j = j + 1) {
                     var seriesPoint = chart.series[j].searchPoint(e, true); // Get the hovered point
 
-                    if (!point || point.dist > seriesPoint.dist) {
+                    if (seriesPoint && (!point || point.distX > seriesPoint.distX)) {
                         point = seriesPoint;
                     }
                 }
@@ -212,57 +259,6 @@
         });
     };
 
-    /**
-     *
-     * @param {!Object} cols
-     * @param {!Object} rows
-     * @param {!HTMLElement} element
-     * @constructor
-     */
-    var InputAreaChart = function(cols, rows, element) {
-        this.height = parseInt(getComputedStyle(element)['height']);
-
-        this.dataTable = this.buildDataTable(cols, rows);
-        this.options = this.buildOptions(this.dataTable);
-
-        this.chart = new google.visualization.AreaChart(element);
-    };
-
-    InputAreaChart.prototype.draw = function() {
-        this.chart.draw(this.dataTable, this.options);
-    };
-
-    InputAreaChart.prototype.buildDataTable = function(cols, rows) {
-
-        return new google.visualization.DataTable({cols: cols, rows: mapRows(rows)});
-    };
-
-    InputAreaChart.prototype.buildOptions = function(dataTable) {
-        var options = {
-            chartArea: { left: 35, top: 10, height: this.height - 30, width: '96%'},
-            height: this.height,
-            hAxis: {
-                gridlines: { count: -1 },
-                viewWindow: { }
-            },
-            theme: 'material'
-        };
-
-        options.series = {
-            0: { targetAxisIndex: 0 },
-            1: { targetAxisIndex: 0 },
-            2: { targetAxisIndex: 0 },
-            3: { targetAxisIndex: 1 },
-            4: { targetAxisIndex: 0 },
-            vAxes: {
-                1: { textPosition: 'in' }
-            }
-        };
-
-        return options
-    };
-
     // Exports
     global.Monitor = M;
-    global.InputAreaChart = InputAreaChart;
 })(window);

@@ -16,8 +16,9 @@
 
     <div id="timeline">
         <div id="glucose_chart"></div>
-        <div id="insulin_chart"></div>
-        <div id="input_chart"></div>
+        <div id="iob_chart"></div>
+        <div id="basal_chart"></div>
+        <div id="carbs_chart"></div>
     </div>
 
     <h2>Browse files</h2>
@@ -49,14 +50,6 @@
   {% endfor %}
   <script type="text/javascript">
     (function () {
-      var inputChart = new InputAreaChart({{ history_cols|tojson|safe }}, {{ history_rows|tojson|safe }}, document.getElementById('input_chart'), false);
-
-      inputChart.draw();
-
-      window.addEventListener('resize', function() {
-        inputChart.draw();
-      });
-
         Monitor.setupHighcharts();
 
         $('#glucose_chart').highcharts(Monitor.GlucoseLineHighchart(
@@ -66,10 +59,18 @@
             '{{ display_unit }}'
         ));
 
-        $('#insulin_chart').highcharts(Monitor.InsulinAreaHighchart(
-            {{ iob|tojson|safe }},
+        $('#basal_chart').highcharts(Monitor.BasalAreaHighchart(
             {{ basal|tojson|safe }},
+            {{ square|tojson|safe }}
+        ));
+
+        $('#iob_chart').highcharts(Monitor.IOBAreaHighchart(
+            {{ iob|tojson|safe }},
             {{ bolus|tojson|safe }}
+        ));
+
+        $('#carbs_chart').highcharts(Monitor.CarbsAreaHighchart(
+            {{ carbs|tojson|safe }}
         ));
 
         Monitor.syncHighchartsMovementsInContainer($('#timeline'));
