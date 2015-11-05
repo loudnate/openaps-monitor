@@ -12,16 +12,17 @@ def timestamp(a_datetime):
     return int((a_datetime - datetime(1970,1,1)).total_seconds()) * 1000
 
 
-def line_chart(entries):
+def line_chart(entries, name=''):
     rows = []
     
     for entry in entries:
-        date = entry.get('date') or entry['display_time']
-        amount = entry.get('sgv') or entry.get('amount') or entry.get('glucose')
+        date = entry.get('dateString') or entry.get('display_time') or entry['date']
+        amount = entry.get('sgv', entry.get('amount', entry.get('glucose')))
     
         rows.append({
             'x': timestamp(parse(date)),
-            'y': amount
+            'y': amount,
+            'name': name
         })
     
     return rows
@@ -85,7 +86,8 @@ def input_history_area_chart(normalized_history):
             bolus += [
                 {
                     'x': timestamp(parse(entry['start_at'])),
-                    'y': entry['amount']
+                    'y': entry['amount'],
+                    'name': entry['description']
                 },
                 {
                     'x': timestamp(parse(entry['end_at'])),

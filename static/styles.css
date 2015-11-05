@@ -15,11 +15,11 @@ pre code {
 }
 
 #glucose_chart {
-    height: 300px;
+    height: 244px;
 }
 
 #basal_chart, #carbs_chart, #iob_chart {
-    height: 100px;
+    height: 144px;
 }
 
 @media screen and (max-width:767px) {
@@ -28,11 +28,4 @@ pre code {
         max-height: 160px;
         -webkit-overflow-scrolling: touch;
     }
-}
-
-@font-face {
-  font-family: 'Roboto2';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Roboto'), local('Roboto2-Regular'), url(third_party/Roboto.ttf) format('truetype');
 }

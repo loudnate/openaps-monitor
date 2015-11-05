@@ -19,11 +19,16 @@
     M.setupHighcharts = function () {
         Highcharts.setOptions({
             chart: {
+                borderColor: '#e7e7e8',
                 marginLeft: 44,
+                marginTop: 46,
                 style: {
                     fontFamily: '-apple-system, sans-serif'
                 }
             },
+            colors: [
+                '#009ddc', '#ff851b', '#98005d', '#85cebc', '#00853e', '#f8ca12', '#b06110', '#ee2e24'
+            ],
             credits: {
                 enabled: false  
             },
@@ -34,9 +39,12 @@
                 text: null
             },
             tooltip: {
-                borderWidth: 0,
-                positioner: function() {
-                    return { x: this.chart.chartWidth - this.label.width - 10, y: 1 }
+                borderRadius: 10,
+                borderWidth: 1,
+                headerFormat: '<span>{point.key}</span><br/>',
+                pointFormat: '<span>{point.x:%l:%M %p}:</span> <b style="color:{point.color}; font-weight: bold">{point.y}</b><br/>',
+                positioner: function(labelWidth, labelHeight, point) {
+                    return { x: Math.min(Math.max(this.chart.plotLeft, point.plotX - labelWidth / 2.0), this.chart.chartWidth - labelWidth), y: 0 }
                 },
                 shadow: false,
                 xDateFormat: "%l:%M %p"
@@ -123,29 +131,37 @@
             },
             series: [
                 {
-                    data: basal,
-                    marker: {
-                        enabled: false
-                    },
-                    name: "Temp Basal",
-                    step: "left"
-                },
-                {
+                    color: Highcharts.getOptions().colors[3],
                     data: square,
                     marker: {
                         enabled: false
                     },
                     name: "Square Bolus",
                     step: "left"
+                },
+                {
+                    color: Highcharts.getOptions().colors[4],
+                    data: basal,
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false,
+                        symbol: 'circle'
+                    },
+                    name: "Temp Basal",
+                    step: "left"
                 }
             ],
             tooltip: {
-                pointFormat: '<span style="color:{point.color}">\u25CF</span> {point.x:%l:%M %p}: <b>{point.y}</b><br/>',
                 valueDecimals: 3,
                 valueSuffix: ' U/hour'
             },
             yAxis: {
-                tickPixelInterval: 16
+                plotLines: [{
+                    color: Highcharts.getOptions().colors[4],
+                    width: 2,
+                    value: 0
+                }],
+                tickPixelInterval: 24
             }
         };
     };
@@ -157,9 +173,12 @@
             },
             series: [
                 {
+                    color: Highcharts.getOptions().colors[5],
                     data: carbs,
                     marker: {
-                        enabled: true
+                        enabled: true,
+                        radius: 6,
+                        symbol: 'triangle'
                     },
                     name: "Carbs",
                     step: "left",
@@ -169,12 +188,8 @@
                     }
                 }
             ],
-            tooltip: {
-                pointFormat: '<span style="color:{point.color}">\u25CF</span> {point.x:%l:%M %p}: <b>{point.y}</b><br/>',
-                synced: true
-            },
             yAxis: {
-                tickPixelInterval: 16
+                tickPixelInterval: 24
             }
         };
     };
@@ -187,6 +202,7 @@
             },
             series: [
                 {
+                    color: Highcharts.getOptions().colors[1],
                     data: iob,
                     marker: {
                         enabled: false
@@ -198,9 +214,12 @@
                     }
                 },
                 {
+                    color: Highcharts.getOptions().colors[2],
                     data: bolus,
                     marker: {
-                        enabled: true
+                        enabled: true,
+                        radius: 6,
+                        symbol: 'triangle-down'
                     },
                     name: "Bolus",
                     step: "left",
@@ -211,7 +230,7 @@
                 }
             ],
             yAxis: {
-                tickPixelInterval: 16
+                tickPixelInterval: 24
             }
         };
     };
