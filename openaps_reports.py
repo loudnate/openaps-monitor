@@ -30,6 +30,7 @@ class Settings(object):
     # }
     IOB = 'iob_history.json'
 
+
     # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
     # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
     NORMALIZE_HISTORY = 'prepared_history_with_dose.json'
@@ -45,8 +46,6 @@ class Settings(object):
     # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
     READ_BG_TARGETS = 'read_bg_targets.json'
 
-    # A report containing the last-applied doses, if not yet present in the `NORMALIZE_HISTORY` report.
-    SET_DOSE = 'set_dose.json'
 
 class OpenAPS(object):
     def __init__(self, path):
@@ -94,18 +93,6 @@ class OpenAPS(object):
 
     def normalized_history(self):
         return self._read_json(Settings.NORMALIZE_HISTORY, [])
-
-    def recent_dose(self):
-        try:
-            set_dose_timestamp = os.path.getmtime(self._get_report_path(Settings.SET_DOSE))
-            history_timestamp = os.path.getmtime(self._get_report_path(Settings.NORMALIZE_HISTORY))
-        except OSError:
-            pass
-        else:
-            if set_dose_timestamp > history_timestamp:
-                return self._read_json(Settings.SET_DOSE, [])
-
-        return []
 
     def iob(self):
         return self._read_json(Settings.IOB, [])

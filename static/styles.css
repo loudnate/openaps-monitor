@@ -1,3 +1,7 @@
+body {
+    font-family: -apple-system, sans-serif;
+}
+
 pre {
     overflow-x: auto;
 }
@@ -6,12 +10,16 @@ pre code {
     white-space: pre;
 }
 
-#glucose_chart {
-    height: 400px;
+#timeline {
+    -webkit-user-select: none;
 }
 
-#input_chart {
-    height: 100px;
+#glucose_chart {
+    height: 244px;
+}
+
+#basal_chart, #carbs_chart, #iob_chart {
+    height: 144px;
 }
 
 @media screen and (max-width:767px) {
@@ -20,11 +28,4 @@ pre code {
         max-height: 160px;
         -webkit-overflow-scrolling: touch;
     }
-}
-
-@font-face {
-  font-family: 'Roboto2';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Roboto'), local('Roboto2-Regular'), url(Roboto.ttf) format('truetype');
 }

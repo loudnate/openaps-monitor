@@ -58,10 +58,4 @@ docs/_build/
 target/
 
 # Third-party asset cache
-bootstrap.css
-bootstrap.js
-chart.js
-jquery.js
-Roboto.ttf
-jsapi.js
-tooltip.css
+static/third_party/*
