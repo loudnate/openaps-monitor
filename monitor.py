@@ -28,8 +28,9 @@ def monitor():
     basal, bolus, square, carbs = input_history_area_chart(reversed(normalized_history))
     actual_glucose = line_chart(reversed(recent_glucose), name='Glucose')
     predicted_glucose = line_chart(predicted_glucose, name='Predicted')
-    target_glucose = glucose_target_range_chart(targets, actual_glucose[0]['x'], predicted_glucose[-1]['x'])
     iob = line_chart(iob, 'IOB')
+
+    target_glucose = glucose_target_range_chart(targets, actual_glucose, predicted_glucose)
 
     return render_template(
         'monitor.html',

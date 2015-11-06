@@ -6,6 +6,7 @@ http://api.highcharts.com/highcharts
 """
 from datetime import datetime
 from dateutil.parser import parse
+from itertools import chain
 
 
 def timestamp(a_datetime):
@@ -28,27 +29,39 @@ def line_chart(entries, name=''):
     return rows
 
 
-def glucose_target_range_chart(targets, start_datetime, end_datetime):
+def glucose_target_range_chart(targets, *args):
     rows = []
 
-    start_time = datetime.fromtimestamp(start_datetime / 1000).time()
-    end_time = datetime.fromtimestamp(end_datetime / 1000).time()
+    start_timestamp = None
+    end_timestamp = None
+    
+    for entry in chain(*args):
+        date = entry['x']
+        if start_timestamp is None or date < start_timestamp:
+            start_timestamp = date
+        
+        if end_timestamp is None or date > end_timestamp:
+            end_timestamp = date
 
-    start_target = targets.at(start_time)
-
-    # TODO: Parse multiple targets
-
-    end_target = targets.at(end_time)
-    rows.append({
-        'x': start_datetime,
-        'low': end_target['low'],
-        'high': end_target['high']
-    })
-    rows.append({
-        'x': end_datetime,
-        'low': end_target['low'],
-        'high': end_target['high']
-    })
+    if start_timestamp is not None and end_timestamp is not None:
+        start_time = datetime.fromtimestamp(start_timestamp / 1000).time()
+        end_time = datetime.fromtimestamp(end_timestamp / 1000).time()
+    
+        start_target = targets.at(start_time)
+    
+        # TODO: Parse multiple targets
+    
+        end_target = targets.at(end_time)
+        rows.append({
+            'x': start_timestamp,
+            'low': end_target['low'],
+            'high': end_target['high']
+        })
+        rows.append({
+            'x': end_timestamp,
+            'low': end_target['low'],
+            'high': end_target['high']
+        })
 
     return rows
 

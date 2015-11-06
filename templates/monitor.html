@@ -50,25 +50,37 @@
     (function () {
         Monitor.setupHighcharts();
 
-        $('#glucose_chart').highcharts(Monitor.GlucoseLineHighchart(
-            {{ actual_glucose|tojson|safe }}, 
-            {{ predicted_glucose|tojson|safe }},
-            {{ target_glucose|tojson|safe }},
+        var actualGlucose = {{ actual_glucose|tojson|safe }};
+        var predictedGlucose = {{ predicted_glucose|tojson|safe }};
+        var targetGlucose = {{ target_glucose|tojson|safe }};
+
+        $('#glucose_chart').toggle(actualGlucose.length + predictedGlucose.length + targetGlucose.length > 0).highcharts(Monitor.GlucoseLineHighchart(
+            actualGlucose,
+            predictedGlucose,
+            targetGlucose,
             '{{ display_unit }}'
         ));
 
-        $('#basal_chart').highcharts(Monitor.BasalAreaHighchart(
-            {{ basal|tojson|safe }},
-            {{ square|tojson|safe }}
+        var basal = {{ basal|tojson|safe }};
+        var square = {{ square|tojson|safe }};
+
+        $('#basal_chart').toggle(basal.length + square.length > 0).highcharts(Monitor.BasalAreaHighchart(
+            basal,
+            square
         ));
 
-        $('#iob_chart').highcharts(Monitor.IOBAreaHighchart(
-            {{ iob|tojson|safe }},
-            {{ bolus|tojson|safe }}
+        var iob = {{ iob|tojson|safe }};
+        var bolus = {{ bolus|tojson|safe }};
+
+        $('#iob_chart').toggle(iob.length + bolus.length > 0).highcharts(Monitor.IOBAreaHighchart(
+            iob,
+            bolus
         ));
 
-        $('#carbs_chart').highcharts(Monitor.CarbsAreaHighchart(
-            {{ carbs|tojson|safe }}
+        var carbs = {{ carbs|tojson|safe }};
+
+        $('#carbs_chart').toggle(carbs.length > 0).highcharts(Monitor.CarbsAreaHighchart(
+            carbs
         ));
 
         Monitor.syncHighchartsMovementsInContainer($('#timeline'));
