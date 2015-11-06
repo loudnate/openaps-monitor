@@ -65,7 +65,12 @@
             yAxis: {
                 startOnTick: true,
                 endOnTick: true,
-                title: null
+                title: null,
+                plotBands: [{
+                    from: 80,
+                    to: 180,
+                    color: 'rgba(68, 170, 213, 0.1)'
+                }]
             }
         });
     }
@@ -203,6 +208,7 @@
             series: [
                 {
                     color: Highcharts.getOptions().colors[1],
+                    lineWidth: 0,
                     data: iob,
                     marker: {
                         enabled: false
