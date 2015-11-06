@@ -41,7 +41,7 @@ class Settings(object):
     #   "date": "<ISO date string>",
     #   "glucose": 100
     # }
-    PREDICT_GLUCOSE = 'predict_glucose.json'
+    PREDICT_GLUCOSE = 'predict_glucose_with_dose.json'
 
     # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
     READ_BG_TARGETS = 'read_bg_targets.json'

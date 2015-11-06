@@ -83,7 +83,7 @@
             series: [
                 {
                     data: actualGlucose,
-                    lineWidth: 1,
+                    lineWidth: 0,
                     marker: {
                         enabled: true,
                     },
@@ -142,7 +142,7 @@
                 {
                     color: Highcharts.getOptions().colors[4],
                     data: basal,
-                    lineWidth: 1,
+                    lineWidth: 0,
                     marker: {
                         enabled: false,
                         symbol: 'circle'
