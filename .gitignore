@@ -57,5 +57,7 @@ docs/_build/
 # PyBuilder
 target/
 
-# Third-party asset cache
+# Third-party asset cache. Make sure that we keep the directory itself though
+# via a .keep file, so that files can be written to it on a new git checkout
 static/third_party/*
+!static/third_party/.keep
