@@ -11,7 +11,7 @@ from highchart import input_history_area_chart
 from highchart import line_chart
 
 from openaps_reports import OpenAPS, Settings
-
+from units import fix_units
 
 app = Flask(__name__)
 
@@ -19,8 +19,8 @@ app = Flask(__name__)
 def monitor():
     aps = app.config['OPENAPS']
 
-    recent_glucose = aps.recent_glucose()
-    predicted_glucose = aps.predicted_glucose()
+    recent_glucose = fix_units(aps.recent_glucose())
+    predicted_glucose = fix_units(aps.predicted_glucose())
     targets = Schedule(aps.read_bg_targets()['targets'])
     normalized_history = aps.normalized_history()
     iob = aps.iob()
