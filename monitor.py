@@ -10,7 +10,8 @@ from highchart import glucose_target_range_chart
 from highchart import input_history_area_chart
 from highchart import line_chart
 
-from openaps_reports import OpenAPS, Settings
+from openaps_reports import OpenAPS
+from settings import Settings
 from units import fix_units
 
 app = Flask(__name__)

@@ -7,44 +7,7 @@ from glob import glob
 import json
 import os
 
-
-class Settings(object):
-    """Filenames containing report data are relative to the openaps path"""
-
-    # What glucose measurement scale should we use. Use "mg/dL" for USA, otherwise "mmol/L"
-    DISPLAY_UNIT = "mg/dL"
-
-    # A report containing glucose data in reverse-chronological order. Each entry should contain both a local timestamp
-    # and a glucose value:
-    # {
-    #   "date" | "display_time" : "<ISO date string>",
-    #   "sgv" | "amount" | "glucose" : 100
-    # }
-    CLEAN_GLUCOSE = 'clean_glucose.json'
-
-    # A report containing IOB levels in chronological order. Each entry should contain a local timestamp and an IOB value:
-    # {
-    #   "date": "<ISO date string>",
-    #   "amount": 1.0
-    #   "unit": "U"
-    # }
-    IOB = 'iob.json'
-
-    # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
-    # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
-    NORMALIZE_HISTORY = 'normalize_history.json'
-
-    # A report containing predicted glucose values in chronological order. Each entry should contain a local timestamp
-    # and a glucose value:
-    # {
-    #   "date": "<ISO date string>",
-    #   "glucose": 100
-    # }
-    PREDICT_GLUCOSE = 'predict_glucose.json'
-
-    # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
-    READ_BG_TARGETS = 'read_bg_targets.json'
-
+from settings import Settings
 
 class OpenAPS(object):
     def __init__(self, path):

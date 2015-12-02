@@ -4,7 +4,7 @@ Cleans up Units of measurement for graphing
 
 """
 
-from openaps_reports import Settings
+from settings import Settings
 
 def fix_units(list):
     MMOLL_CONVERT_FACTOR = 18.0
