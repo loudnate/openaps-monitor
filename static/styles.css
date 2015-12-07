@@ -12,6 +12,8 @@ pre code {
 
 #timeline {
     -webkit-user-select: none;
+    margin-left: -15px;
+    margin-right: -15px;
 }
 
 #glucose_chart {
