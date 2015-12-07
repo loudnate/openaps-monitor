@@ -11,6 +11,7 @@ $ git clone git@github.com:loudnate/openaps-monitor.git
 ```
 Install the required python packages:
 ```
+sudo apt-get install libopenblas-dev liblapack-dev
 $ cd openaps-monitor
 $ pip install -r requirements.txt
 ```
