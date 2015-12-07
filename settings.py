@@ -38,11 +38,11 @@ class Settings(object):
     #   "amount": 1.0
     #   "unit": "U"
     # }
-    IOB = 'iob.json'
+    IOB = 'iob_with_dose.json'
 
     # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
     # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
-    NORMALIZE_HISTORY = 'normalize_history.json'
+    NORMALIZE_HISTORY = 'normalize_history_and_dose.json'
 
     # A report containing predicted glucose values in chronological order. Each entry should contain a local timestamp
     # and a glucose value:
@@ -51,7 +51,7 @@ class Settings(object):
     #   "ammount": 100,
     #   "unit": "mg/dL"
     # }
-    PREDICT_GLUCOSE = 'predict_glucose.json'
+    PREDICT_GLUCOSE = 'predict_glucose_with_dose.json'
     
     # A report containing predicted glucose values prior to added dose in chronological order. Each entry should contain a local timestamp
     # and a glucose value:
