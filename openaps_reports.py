@@ -3,11 +3,69 @@ Interface for openaps reports
 
 """
 from datetime import datetime
+from datetime import time
+from dateutil.parser import parse
 from glob import glob
 import json
 import os
 
 from settings import Settings
+
+
+class Schedule(object):
+    def __init__(self, entries):
+        """
+
+        :param entries:
+        :type entries: list(dict)
+        :return:
+        :rtype:
+        """
+        self.entries = entries
+
+    def at(self, time):
+        """
+
+        :param time:
+        :type time: time
+        :return:
+        :rtype: dict
+        """
+        result = {}
+
+        for entry in self.entries:
+            if parse(entry['start']).timetz() > time:
+                break
+            result = entry
+
+        return result
+
+    def between(self, start_time, end_time):
+        """
+
+        :param start_time:
+        :type start_time: time
+        :param end_time:
+        :type end_time: time
+        :return:
+        :rtype: list(dict)
+        """
+        if start_time > end_time:
+            return self.between(start_time, time.max) + self.between(time.min, end_time)
+
+        results = [
+            self.at(start_time)
+        ]
+
+        for entry in self.entries:
+            entry_time = parse(entry['start']).timetz()
+            if entry_time > end_time:
+                break
+            elif entry_time > start_time:
+                results.append(entry)
+
+        return results
+
 
 class OpenAPS(object):
     def __init__(self, path):
