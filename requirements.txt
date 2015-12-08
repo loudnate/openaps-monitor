@@ -1,4 +1,3 @@
 flask
-openapscontrib.predict
 markupsafe
 python-dateutil
