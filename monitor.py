@@ -4,13 +4,12 @@ import sys
 
 from flask import Flask, render_template
 
-from openapscontrib.predict.predict import Schedule
-
 from highchart import glucose_target_range_chart
 from highchart import input_history_area_chart
 from highchart import line_chart
 
 from openaps_reports import OpenAPS
+from openaps_reports import Schedule
 from settings import Settings
 from units import fix_units
 
@@ -26,12 +25,12 @@ def monitor():
     normalized_history = aps.normalized_history()
     iob = aps.iob()
 
+    target_glucose = glucose_target_range_chart(targets, recent_glucose, predicted_glucose)
+
     basal, bolus, square, carbs = input_history_area_chart(reversed(normalized_history))
     actual_glucose = line_chart(reversed(recent_glucose), name='Glucose')
     predicted_glucose = line_chart(predicted_glucose, name='Predicted')
     iob = line_chart(iob, 'IOB')
-
-    target_glucose = glucose_target_range_chart(targets, actual_glucose, predicted_glucose)
 
     return render_template(
         'monitor.html',

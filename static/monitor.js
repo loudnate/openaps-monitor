@@ -83,11 +83,16 @@
             series: [
                 {
                     data: actualGlucose,
-                    lineWidth: 1,
+                    lineWidth: 0,
                     marker: {
                         enabled: true,
                     },
-                    name: "Glucose"
+                    name: "Glucose",
+                    states: {
+                        hover: {
+                            lineWidthPlus: 0
+                        }
+                    }
                 },
                 {
                     color: Highcharts.getOptions().colors[0],
@@ -97,7 +102,7 @@
                         enabled: false,
                         symbol: 'circle'
                     },
-                    name: "Predicted",
+                    name: "Predicted"
                 },
                 {
                     color: Highcharts.getOptions().colors[0],
@@ -112,6 +117,7 @@
                             enabled: false
                         }
                     },
+                    step: "left",
                     stickyTracking: false,
                     type: 'arearange',
                     zIndex: 0
