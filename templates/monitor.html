@@ -77,9 +77,11 @@
             bolus
         ));
 
+        var cob = {{ cob|tojson|safe }}
         var carbs = {{ carbs|tojson|safe }};
 
-        $('#carbs_chart').toggle(carbs.length > 0).highcharts(Monitor.CarbsAreaHighchart(
+        $('#carbs_chart').toggle(cob.length + carbs.length > 0).highcharts(Monitor.CarbsAreaHighchart(
+            cob,
             carbs
         ));
 

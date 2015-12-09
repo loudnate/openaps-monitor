@@ -31,6 +31,7 @@ def monitor():
     actual_glucose = line_chart(reversed(recent_glucose), name='Glucose')
     predicted_glucose = line_chart(predicted_glucose, name='Predicted')
     iob = line_chart(iob, 'IOB')
+    cob = line_chart(aps.cob(), 'COB')
 
     return render_template(
         'monitor.html',
@@ -39,6 +40,7 @@ def monitor():
         predicted_glucose=predicted_glucose,
         target_glucose=target_glucose,
         iob=iob,
+        cob=cob,
         basal=basal,
         bolus=bolus,
         square=square,
