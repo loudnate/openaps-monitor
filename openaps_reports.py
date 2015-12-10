@@ -107,6 +107,9 @@ class OpenAPS(object):
 
     def predicted_glucose(self):
         return self._read_json(Settings.PREDICT_GLUCOSE, [])
+               
+    def predicted_glucose_without_dose(self):
+        return self._read_json(Settings.PREDICT_GLUCOSE_WITHOUT_DOSE, [])
 
     def recent_glucose(self):
         return self._read_json(Settings.CLEAN_GLUCOSE, [])

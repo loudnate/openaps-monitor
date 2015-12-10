@@ -30,7 +30,7 @@ class Settings(object):
     #   "amount": 12.0
     #   "unit": "g"
     # }
-    COB = 'cob.json'
+    COB = 'cob_history.json'
 
     # A report containing IOB levels in chronological order. Each entry should contain a local timestamp and an IOB value:
     # {
@@ -38,7 +38,7 @@ class Settings(object):
     #   "amount": 1.0
     #   "unit": "U"
     # }
-    IOB = 'iob.json'
+    IOB = 'iob_history.json'
 
     # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
     # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
@@ -50,7 +50,15 @@ class Settings(object):
     #   "date": "<ISO date string>",
     #   "glucose": 100
     # }
-    PREDICT_GLUCOSE = 'predict_glucose.json'
+    PREDICT_GLUCOSE = 'predict_glucose_with_dose.json'
+    
+    # A report containing predicted glucose values prior to added dose in chronological order. Each entry should contain a local timestamp
+    # and a glucose value:
+    # {
+    #   "date": "<ISO date string>",
+    #   "glucose": 100
+    # }
+    PREDICT_GLUCOSE_WITHOUT_DOSE = 'predict_glucose_without_future_basal.json'
 
     # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
     READ_BG_TARGETS = 'read_bg_targets.json'
