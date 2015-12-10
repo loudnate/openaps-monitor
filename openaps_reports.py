@@ -3,48 +3,68 @@ Interface for openaps reports
 
 """
 from datetime import datetime
+from datetime import time
+from dateutil.parser import parse
 from glob import glob
 import json
 import os
 
-
-class Settings(object):
-    """Filenames containing report data are relative to the openaps path"""
-
-    # What glucose measurement scale should we use. Use "mg/dL" for USA, otherwise "mmol/L"
-    DISPLAY_UNIT = "mg/dL"
-
-    # A report containing glucose data in reverse-chronological order. Each entry should contain both a local timestamp
-    # and a glucose value:
-    # {
-    #   "date" | "display_time" : "<ISO date string>",
-    #   "sgv" | "amount" | "glucose" : 100
-    # }
-    CLEAN_GLUCOSE = 'clean_glucose.json'
-
-    # A report containing IOB levels in chronological order. Each entry should contain a local timestamp and an IOB value:
-    # {
-    #   "date": "<ISO date string>",
-    #   "amount": 1.0
-    #   "unit": "U"
-    # }
-    IOB = 'iob_history.json'
+from settings import Settings
 
 
-    # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
-    # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
-    NORMALIZE_HISTORY = 'prepared_history_with_dose.json'
+class Schedule(object):
+    def __init__(self, entries):
+        """
 
-    # A report containing predicted glucose values in chronological order. Each entry should contain a local timestamp
-    # and a glucose value:
-    # {
-    #   "date": "<ISO date string>",
-    #   "glucose": 100
-    # }
-    PREDICT_GLUCOSE = 'predict_glucose_with_dose.json'
+        :param entries:
+        :type entries: list(dict)
+        :return:
+        :rtype:
+        """
+        self.entries = entries
 
-    # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
-    READ_BG_TARGETS = 'read_bg_targets.json'
+    def at(self, time):
+        """
+
+        :param time:
+        :type time: time
+        :return:
+        :rtype: dict
+        """
+        result = {}
+
+        for entry in self.entries:
+            if parse(entry['start']).timetz() > time:
+                break
+            result = entry
+
+        return result
+
+    def between(self, start_time, end_time):
+        """
+
+        :param start_time:
+        :type start_time: time
+        :param end_time:
+        :type end_time: time
+        :return:
+        :rtype: list(dict)
+        """
+        if start_time > end_time:
+            return self.between(start_time, time.max) + self.between(time.min, end_time)
+
+        results = [
+            self.at(start_time)
+        ]
+
+        for entry in self.entries:
+            entry_time = parse(entry['start']).timetz()
+            if entry_time > end_time:
+                break
+            elif entry_time > start_time:
+                results.append(entry)
+
+        return results
 
 
 class OpenAPS(object):
@@ -96,3 +116,6 @@ class OpenAPS(object):
 
     def iob(self):
         return self._read_json(Settings.IOB, [])
+
+    def cob(self):
+        return self._read_json(Settings.COB, [])
