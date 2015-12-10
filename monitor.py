@@ -21,15 +21,17 @@ def monitor():
 
     recent_glucose = fix_units(aps.recent_glucose())
     predicted_glucose = fix_units(aps.predicted_glucose())
+    predicted_glucose_without_dose = aps.predicted_glucose_without_dose()
     targets = Schedule(aps.read_bg_targets()['targets'])
     normalized_history = aps.normalized_history()
     iob = aps.iob()
 
-    target_glucose = glucose_target_range_chart(targets, recent_glucose, predicted_glucose)
+    target_glucose = glucose_target_range_chart(targets, recent_glucose, predicted_glucose, predicted_glucose_without_dose)
 
     basal, bolus, square, carbs = input_history_area_chart(reversed(normalized_history))
     actual_glucose = line_chart(reversed(recent_glucose), name='Glucose')
     predicted_glucose = line_chart(predicted_glucose, name='Predicted')
+    predicted_glucose_without_dose = line_chart(predicted_glucose_without_dose, name='Predicted Without Dose')
     iob = line_chart(iob, 'IOB')
     cob = line_chart(aps.cob(), 'COB')
 
@@ -38,6 +40,7 @@ def monitor():
         openaps=aps,
         actual_glucose=actual_glucose,
         predicted_glucose=predicted_glucose,
+        predicted_glucose_without_dose=predicted_glucose_without_dose,
         target_glucose=target_glucose,
         iob=iob,
         cob=cob,
