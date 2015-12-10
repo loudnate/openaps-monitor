@@ -24,6 +24,14 @@ class Settings(object):
     # }
     CLEAN_GLUCOSE = 'clean_glucose.json'
 
+    # A report containing COB levels in chronological order. Each entry should contain a local timestamp and a COB value:
+    # {
+    #   "date": "<ISO date string>",
+    #   "amount": 12.0
+    #   "unit": "g"
+    # }
+    COB = 'cob.json'
+
     # A report containing IOB levels in chronological order. Each entry should contain a local timestamp and an IOB value:
     # {
     #   "date": "<ISO date string>",

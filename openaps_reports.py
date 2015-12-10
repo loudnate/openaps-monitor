@@ -116,3 +116,6 @@ class OpenAPS(object):
 
     def iob(self):
         return self._read_json(Settings.IOB, [])
+
+    def cob(self):
+        return self._read_json(Settings.COB, [])

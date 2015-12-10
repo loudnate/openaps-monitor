@@ -172,7 +172,7 @@
         };
     };
 
-    M.CarbsAreaHighchart = function(carbs) {
+    M.CarbsAreaHighchart = function(cob, carbs) {
         return {
             chart: {
                 type: 'area'
@@ -180,6 +180,18 @@
             series: [
                 {
                     color: Highcharts.getOptions().colors[5],
+                    data: cob,
+                    marker: {
+                        enabled: false
+                    },
+                    name: "COB",
+                    tooltip: {
+                        valueDecimals: 0,
+                        valueSuffix: ' g'
+                    }
+                },
+                {
+                    color: Highcharts.getOptions().colors[6],
                     data: carbs,
                     marker: {
                         enabled: true,
