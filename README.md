@@ -28,39 +28,8 @@ From a web browser, check that the server is running by entering the hostname of
 
 ## Customizing the monitor to graph report data
 
-If you'd like to graph your report data, you can set the path names of your reports in the `Settings` class.
-_TODO: This should probably be moved to a separate python file, maybe also a subclass?_
-
-```python
-class Settings(object):
-    """Defines file names relative to the openaps path containing report data to display"""
-
-    # A report containing glucose data in reverse-chronological order. Each entry should contain both a local timestamp
-    # and a glucose value:
-    # {
-    #   "date" | "display_time" : "<ISO date string>",
-    #   "sgv" | "amount" | "glucose" : 100
-    # }
-    CLEAN_GLUCOSE = 'clean_glucose.json'
-
-    # A report containing history data in reverse-chronological order. Each entry should be in the dictionary format as
-    # defined by openapscontrib.mmhistorytools, and should be fully munged by those steps for best display.
-    NORMALIZE_HISTORY = 'normalize_history.json'
-
-    # A report containing predicted glucose values in chronological order. Each entry should contain a local timestamp
-    # and a glucose value:
-    # {
-    #   "date": "<ISO date string>",
-    #   "glucose": 100
-    # }
-    PREDICT_GLUCOSE = 'predict_glucose.json'
-
-    # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
-    READ_BG_TARGETS = 'read_bg_targets.json'
-
-    # A report containing the last-applied doses, if not yet present in `NORMALIZE_HISTORY`.
-    SET_DOSE = 'set_dose.json'
-```
+If you'd like to graph your report data, you can set the path names of your reports in the `Settings` class
+in the 'settings.py' file.
 
 ## Running the monitor server on machine startup
 There are multiple ways to run the server automatically on startup. Advanced users might look into `supervisord`.
