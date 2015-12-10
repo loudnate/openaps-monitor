@@ -163,7 +163,7 @@
                 {
                     color: Highcharts.getOptions().colors[4],
                     data: basal,
-                    lineWidth: 0,
+                    lineWidth: 1,
                     marker: {
                         enabled: false,
                         symbol: 'circle'
@@ -236,7 +236,6 @@
             series: [
                 {
                     color: Highcharts.getOptions().colors[1],
-                    lineWidth: 0,
                     data: iob,
                     marker: {
                         enabled: false
