@@ -110,7 +110,7 @@
                     name: "Predicted"
                 },
                 {
-	                color: 'rgba(68, 170, 213, 0.5)',
+                    color: 'rgba(68, 170, 213, 0.5)',
                     data: predictedGlucoseWithoutDose,
                     dashStyle: "Dash",
                     marker: {
