@@ -48,9 +48,19 @@ class Settings(object):
     # and a glucose value:
     # {
     #   "date": "<ISO date string>",
-    #   "glucose": 100
+    #   "ammount": 100,
+    #   "unit": "mg/dL"
     # }
     PREDICT_GLUCOSE = 'predict_glucose.json'
+    
+    # A report containing predicted glucose values prior to added dose in chronological order. Each entry should contain a local timestamp
+    # and a glucose value:
+    # {
+    #   "date": "<ISO date string>",
+    #   "ammount": 100,
+    #   "unit": "mg/dL"
+    # }
+    PREDICT_GLUCOSE_WITHOUT_DOSE = 'predict_glucose_without_future_basal.json'
 
     # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
     READ_BG_TARGETS = 'read_bg_targets.json'
