@@ -60,7 +60,7 @@ class Settings(object):
     #   "ammount": 100,
     #   "unit": "mg/dL"
     # }
-    PREDICT_GLUCOSE_WITHOUT_DOSE = 'predict_glucose_without_future_basal.json'
+    PREDICT_GLUCOSE_WITHOUT_DOSE = 'predict_glucose_from_reservoir_and_dose.json'
 
     # A report containing the output of the openaps medtronic vendor command "read_bg_targets".
     READ_BG_TARGETS = 'read_bg_targets.json'
