@@ -65,12 +65,7 @@
             yAxis: {
                 startOnTick: true,
                 endOnTick: true,
-                title: null,
-                plotBands: [{
-                    from: 80,
-                    to: 180,
-                    color: 'rgba(68, 170, 213, 0.1)'
-                }]
+                title: null
             }
         });
     }
@@ -141,6 +136,13 @@
             tooltip: {
                 valueDecimals: 0,
                 valueSuffix: ' ' + displayUnit
+            },
+            yAxis: {
+                plotBands: [{
+                    from: 80,
+                    to: 180,
+                    color: 'rgba(68, 170, 213, 0.1)'
+                }]
             }
         };
     };
