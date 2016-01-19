@@ -21,7 +21,7 @@ def monitor():
 
     recent_glucose = fix_units(aps.recent_glucose())
     predicted_glucose = fix_units(aps.predicted_glucose())
-    predicted_glucose_without_dose = aps.predicted_glucose_without_dose()
+    predicted_glucose_without_dose = fix_units(aps.predicted_glucose_without_dose())
     targets = Schedule(aps.read_bg_targets()['targets'])
     normalized_history = aps.normalized_history()
     iob = aps.iob()
