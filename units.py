@@ -11,9 +11,10 @@ def fix_units(list):
 
     if Settings.DISPLAY_UNIT == 'mmol/L':
         for idx in range(0, len(list)):
-            # Recent Glucose:
-            if 'sgv' in list[idx]:
-                list[idx]['sgv'] = list[idx]['sgv'] / MMOLL_CONVERT_FACTOR
+            # Recent Glucose: The key can be either sgv or glucose
+            for key_name in ['sgv', 'glucose']:
+                if key_name in list[idx]:
+                    list[idx][key_name] = list[idx][key_name] / MMOLL_CONVERT_FACTOR
 
             # Predicted Glucose:
             #    - "amount": 134.71313969351854, "unit": "mg/dL"
