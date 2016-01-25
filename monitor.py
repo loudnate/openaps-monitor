@@ -63,8 +63,8 @@ CSS_ASSETS = (
 JS_ASSETS = (
     ('static/third_party/jquery.js', 'https://code.jquery.com/jquery-2.1.4.min.js'),
     ('static/third_party/bootstrap.js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'),
-    ('static/third_party/highcharts.js', 'http://code.highcharts.com/highcharts.js'),
-    ('static/third_party/highcharts-more.js', 'http://code.highcharts.com/highcharts-more.js'),
+    ('static/third_party/highcharts.js', 'http://code.highcharts.com/4.1.9/highcharts.js'),
+    ('static/third_party/highcharts-more.js', 'http://code.highcharts.com/4.1.9/highcharts-more.js'),
     ('static/monitor.js', None),
 )
 
